@@ -28,19 +28,41 @@ const routes = [
     component: <MainDashboard />,
   },
   {
-    name: "NFT Marketplace",
+    name: "Users",
     layout: "/admin",
     path: "nft-marketplace",
-    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
+    icon: <i class="bi bi-people-fill"></i>,
     component: <NFTMarketplace />,
     secondary: true,
   },
   {
-    name: "Data Tables",
+    name: "Orders",
     layout: "/admin",
-    icon: <MdBarChart className="h-6 w-6" />,
+    icon: <i class="bi bi-box-seam-fill"></i>,
     path: "data-tables",
     component: <DataTables />,
+  },
+
+  {
+    name: "Restaurants",
+    layout: "/admin",
+    path: "sign-in",
+    icon: <i class="bi bi-shop"></i>,
+    component: <SignIn />,
+  },
+  {
+    name: "Categories",
+    layout: "/admin",
+    path: "categories",
+    icon: <i class="bi bi-grid-1x2-fill"></i>,
+    component: <RTLDefault />,
+  },
+  {
+    name: "Admin",
+    layout: "/rtl",
+    path: "rtl",
+    icon: <i class="bi bi-person-fill-lock"></i>,
+    component: <RTLDefault />,
   },
   {
     name: "Profile",
@@ -48,20 +70,6 @@ const routes = [
     path: "profile",
     icon: <MdPerson className="h-6 w-6" />,
     component: <Profile />,
-  },
-  {
-    name: "Sign In",
-    layout: "/auth",
-    path: "sign-in",
-    icon: <MdLock className="h-6 w-6" />,
-    component: <SignIn />,
-  },
-  {
-    name: "RTL Admin",
-    layout: "/rtl",
-    path: "rtl",
-    icon: <MdHome className="h-6 w-6" />,
-    component: <RTLDefault />,
   },
 ];
 export default routes;
