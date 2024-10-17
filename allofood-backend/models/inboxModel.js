@@ -1,21 +1,8 @@
 const mongoose = require('mongoose');
-const User = require('./UserModel');
+const User = require('./userModel');
 
 const inboxSchema = new mongoose.Schema({
-    sender: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-        index: true,
-        validate: {
-            validator: async function (userId) {
-                const user = await User.findById(userId);
-                return user != null;
-            },
-            message: "User does not exist sadly",
-        },
-    },
-    receiver: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -35,7 +22,8 @@ const inboxSchema = new mongoose.Schema({
     },
     status: {
         type: Boolean,
-        default: false
+        enum: ["read", "unread"],
+        default: "unread"
     }
 },
 {

@@ -3,6 +3,11 @@ require("dotenv").config();
 
 const seedRoles = require("./seedRoles");
 const seedUsers = require("./seedUsers");
+const seedInbox = require("./seedInbox");
+const seedItems = require("./seedItems");
+const seedOrders = require("./seedOrders");
+const seedCategories = require("./seedCategories");
+const seedRestaurants = require("./seedRestaurants");
 
 const seedDatabase = async () => {
   try {
@@ -13,6 +18,11 @@ const seedDatabase = async () => {
     // Run seeders
     await seedRoles();
     await seedUsers();
+    await seedCategories();
+    await seedInbox();
+    await seedRestaurants();
+    await seedItems();
+    await seedOrders();
 
     console.log("Database seeded successfully");
   } catch (error) {

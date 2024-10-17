@@ -13,6 +13,11 @@ const itemSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
+    stock: {
+        type: Number,
+        required: true,
+        min: 0
+    },
     description: {
         type: String,
         trim: true

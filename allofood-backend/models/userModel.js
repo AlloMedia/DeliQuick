@@ -1,44 +1,34 @@
-const Role = require("./roleModel");
 const mongoose = require("mongoose");
+const Role = require("./roleModel");
 
-const schema = {
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    min: 6,
-    max: 255,
+    minlength: 6,
+    maxlength: 255,
   },
   email: {
     type: String,
     required: true,
-    min: 6,
-    max: 255,
+    minlength: 6,
+    maxlength: 255,
   },
   phone: {
     type: String,
     required: false,
-    min: 6,
-    max: 15,
+    minlength: 6,
+    maxlength: 15,
   },
   address: {
-    street: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
+    type: String,
+    required: true,
   },
   password: {
     type: String,
     required: true,
   },
-  is_verified: {
+  isVerified: {
     type: Boolean,
     default: false,
   },
@@ -50,11 +40,6 @@ const schema = {
     type: Boolean,
     default: false,
   },
-  date: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role",
@@ -64,11 +49,13 @@ const schema = {
         const role = await Role.findById(roleId);
         return role != null;
       },
-      message: "Role does not exist sadly",
+      message: "Role does not exist",
     },
   },
-};
+}, {
+  timestamps: true,
+});
 
-const userSchema = new mongoose.Schema(schema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = User;

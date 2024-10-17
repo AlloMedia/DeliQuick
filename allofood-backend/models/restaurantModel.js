@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("./UserModel");
+const User = require("./userModel");
 
 const restaurantSchema = new mongoose.Schema(
   {
@@ -42,18 +42,6 @@ const restaurantSchema = new mongoose.Schema(
     },
     address: {
       street: {
-        type: String,
-        required: true,
-      },
-      city: {
-        type: String,
-        required: true,
-      },
-      state: {
-        type: String,
-        required: true,
-      },
-      zip: {
         type: String,
         required: true,
       },
