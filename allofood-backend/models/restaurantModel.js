@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("./userModel");
+const { bool, boolean } = require("joi");
 
 const restaurantSchema = new mongoose.Schema(
   {
@@ -54,6 +55,11 @@ const restaurantSchema = new mongoose.Schema(
       type: String,
       enum: ["open", "close"],
       default: "open",
+    },
+    isAproved: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   {
