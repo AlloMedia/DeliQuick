@@ -28,6 +28,8 @@ module.exports = async () => {
                 },
                 phone: "0123456789",
                 status: "open",
+                isAproved:false
+
             },
             {
                 name: "Restaurant 2",
@@ -43,6 +45,8 @@ module.exports = async () => {
                 },
                 phone: "0123456789",
                 status: "open",
+                isAproved:false
+
             },
         ];
         await Restaurant.insertMany(restaurants);
