@@ -1,5 +1,5 @@
 const express = require('express');
-const { rejectOrAcceptRestaurant } = require('../controllers/superadmin/SuperAdminController');  
+const { rejectOrAcceptRestaurant } = require('../controllers/superadmin/superAdminController');  
 const { getUnapprovedRestaurants } = require("../controllers/superadmin/restaurantController");
 const router = express.Router();
 
