@@ -6,6 +6,7 @@ const router = express.Router();
 // Route for rejecting or accepting a restaurant
 router.put('/restaurants/reject-or-accept/:restaurantId', rejectOrAcceptRestaurant);
 router.get('/Restaurant/unapproved', getUnapprovedRestaurants);
+router.post("/add", superAdminController.addRestaurant);
 
 
 
