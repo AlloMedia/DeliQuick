@@ -18,6 +18,7 @@ import {
   MdPerson,
   MdLock,
 } from "react-icons/md";
+import Orders from "views/admin/orders";
 
 const routes = [
   {
@@ -39,10 +40,9 @@ const routes = [
     name: "Orders",
     layout: "/admin",
     icon: <i class="bi bi-box-seam-fill"></i>,
-    path: "data-tables",
-    component: <DataTables />,
+    path: "orders",
+    component: <Orders />,
   },
-
   {
     name: "Restaurants",
     layout: "/admin",
@@ -59,10 +59,10 @@ const routes = [
   },
   {
     name: "Admin",
-    layout: "/rtl",
-    path: "rtl",
+    layout: "/admin",
+    path: "default",
     icon: <i class="bi bi-person-fill-lock"></i>,
-    component: <RTLDefault />,
+    component: <MainDashboard />,
   },
   {
     name: "Profile",
