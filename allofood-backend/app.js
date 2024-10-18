@@ -7,6 +7,7 @@ const cors = require('cors');
 // const userRoutes = require('./routes/userRoutes');
 // const deliveryRoutes = require('./routes/deliveryRoutes');
 // const managerRoutes = require('./routes/managerRoutes');
+const superAdminRoutes = require('./routes/superAdminRoutes');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -31,6 +32,7 @@ app.use('/auth', authRoutes);
 // app.use('/user', userRoutes);
 // app.use('/delivery', deliveryRoutes);
 // app.use('/manager', managerRoutes);
+app.use('/superadmin', superAdminRoutes);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {

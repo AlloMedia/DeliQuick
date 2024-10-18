@@ -55,6 +55,10 @@ const restaurantSchema = new mongoose.Schema(
       enum: ["open", "close"],
       default: "open",
     },
+    isApproved: {
+      type: Boolean,
+      default: "false",
+    }
   },
   {
     timestamps: true,
