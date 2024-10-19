@@ -2,7 +2,6 @@ import React from 'react';
 import Modal from 'react-modal';
 import './styles.css';
 import defaultImg from '../../../../../assets/img/avatars/avatar1.png';
-import { formatDate, formatTime } from '../../../../../helpers/date-format';
 import statusStyles from '../../../../../helpers/status-data';
 
 Modal.setAppElement('#root');
