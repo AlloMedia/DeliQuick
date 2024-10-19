@@ -2,7 +2,7 @@ import defaultImg from '../../../../assets/img/avatars/avatar1.png';
 import { formatDate, formatTime } from '../../../../helpers/date-format';
 import statusStyles from '../../../../helpers/status-data';
 
-const OrderCard = ({ order, onClick }) => {
+const OrderCard = ({ order, onClick, onEdit }) => {
   const { bgColor, icon } = statusStyles[order.status] || {};
   
   return (
@@ -61,7 +61,7 @@ const OrderCard = ({ order, onClick }) => {
 
       <div className="px-4 flex items-center space-x-2 text-sm font-semibold py-3">
         <button className="bg-green-200 w-1/2 px-3 py-2 rounded-xl hover:bg-green-300 transition-colors duration-300" onClick={onClick}>See Details</button>
-        <button className="bg-blue-500 text-white w-1/2 px-3 py-2 rounded-xl hover:bg-blue-600 transition-colors duration-300">Edit Order</button>
+        <button className="bg-blue-500 text-white w-1/2 px-3 py-2 rounded-xl hover:bg-blue-600 transition-colors duration-300" onClick={onEdit}>Edit Order</button>
       </div>
     </div>
   )
