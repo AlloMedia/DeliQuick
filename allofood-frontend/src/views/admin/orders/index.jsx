@@ -3,6 +3,7 @@ import axiosInstance from '../../../api/config/axios';
 import OrderCard from './components';
 import FilterAndSearch from './components/filter';
 import OrderDetailsModal from './components/modal';
+import EditOrderModal from './components/modal/edit';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
@@ -10,6 +11,7 @@ const Orders = () => {
   const [loading, setLoading] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -47,6 +49,25 @@ const Orders = () => {
     setIsModalOpen(false);
   };
 
+  const openEditModal = (order) => {
+    setSelectedOrder(order);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedOrder(null);
+    setIsEditModalOpen(false);
+  };
+
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      await axiosInstance.put(`/manager/orders/${orderId}`, { status: newStatus });
+      fetchOrders(); // Refresh the order list
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className='flex justify-between'>
@@ -58,11 +79,12 @@ const Orders = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredOrders.map((order) => (
-            <OrderCard key={order._id} order={order} onClick={() => openModal(order)} />
+            <OrderCard key={order._id} order={order} onClick={() => openModal(order)} onEdit={() => openEditModal(order)} />
           ))}
         </div>
       )}
       <OrderDetailsModal isOpen={isModalOpen} onRequestClose={closeModal} order={selectedOrder} />
+      <EditOrderModal isOpen={isEditModalOpen} onRequestClose={closeEditModal} order={selectedOrder} onUpdateStatus={handleUpdateStatus} />
     </div>
   );
 };
