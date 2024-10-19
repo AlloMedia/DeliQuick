@@ -19,6 +19,7 @@ import {
   MdLock,
 } from "react-icons/md";
 import Orders from "views/admin/orders";
+import Restaurant from "views/superadmin/Restaurant";
 
 const routes = [
   {
@@ -48,7 +49,7 @@ const routes = [
     layout: "/admin",
     path: "sign-in",
     icon: <i class="bi bi-shop"></i>,
-    component: <SignIn />,
+    component: <Restaurant />,
   },
   {
     name: "Categories",
