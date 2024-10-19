@@ -6,7 +6,7 @@ require('dotenv').config();
 const cors = require('cors');
 // const userRoutes = require('./routes/userRoutes');
 // const deliveryRoutes = require('./routes/deliveryRoutes');
-// const managerRoutes = require('./routes/managerRoutes');
+const managerRoutes = require('./routes/managerRoutes');
 
 const app = express();
 const PORT = process.env.PORT;
@@ -30,7 +30,7 @@ app.use(session({
 app.use('/auth', authRoutes);
 // app.use('/user', userRoutes);
 // app.use('/delivery', deliveryRoutes);
-// app.use('/manager', managerRoutes);
+app.use('/manager', managerRoutes);
 
 if (process.env.NODE_ENV !== 'test') {
   app.listen(PORT, () => {

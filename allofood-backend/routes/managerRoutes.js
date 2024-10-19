@@ -1,8 +1,9 @@
-const managerController = require("../controllers/manager/managerController");
+const managerController = require("../controllers/manager/ManagerController");
+const orderController = require("../controllers/manager/OrderController");
 
 const express = require("express");
 const router = express.Router();
 
-router.get("/me", [''], managerController.getManager);
+router.get("/orders", orderController.getAllOrders);
 
 module.exports = router;
