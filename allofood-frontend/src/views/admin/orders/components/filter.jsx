@@ -37,6 +37,13 @@ const FilterAndSearch = ({ onFilter }) => {
             >
                 Delivered
             </button>
+            <button
+                type="button"
+                className={getButtonClass("Rejected")}
+                onClick={() => handleFilter("Rejected")}
+            >
+                Rejected
+            </button>
         </div>
     );
 };

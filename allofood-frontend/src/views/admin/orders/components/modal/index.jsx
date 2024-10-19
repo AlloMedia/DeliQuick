@@ -1,13 +1,33 @@
-import defaultImg from '../../../../assets/img/avatars/avatar1.png';
-import { formatDate, formatTime } from '../../../../helpers/date-format';
-import statusStyles from '../../../../helpers/status-data';
+import React from 'react';
+import Modal from 'react-modal';
+import './styles.css';
+import defaultImg from '../../../../../assets/img/avatars/avatar1.png';
+import { formatDate, formatTime } from '../../../../../helpers/date-format';
+import statusStyles from '../../../../../helpers/status-data';
 
-const OrderCard = ({ order, onClick }) => {
+Modal.setAppElement('#root');
+
+const OrderDetails = ({ isOpen, onRequestClose, order }) => {
+  if (!order) return null;
   const { bgColor, icon } = statusStyles[order.status] || {};
-  
+
   return (
-    <div className="bg-white flex flex-col justify-between rounded-lg shadow-md overflow-hidden">
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      contentLabel="Order Details"
+      className="modal"
+      overlayClassName="overlay"
+    >
       <div className="p-4">
+        <div className='flex justify-between'>
+          <h2 className="text-xl font-bold mb-4">Order Details</h2>
+          <button onClick={onRequestClose} className="float-right h-fit text-gray-400 hover:text-gray-800">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
         <div className="flex items-center justify-between mb-4">
           <div className='w-full flex items-center'>
             <img className="w-10 h-10 rounded-lg mr-3" src={order.user.image || defaultImg} alt={`${order.user.name} avatar`} />
@@ -23,9 +43,8 @@ const OrderCard = ({ order, onClick }) => {
             </div>
           </div>
         </div>
-        <div className='pb-2 border-b text-sm  flex justify-between'>
-          <p>{formatDate(order.createdAt)}</p>
-          <p>{formatTime(order.createdAt)}</p>
+        <div className='font-semibold'>
+          <p>Transaction Details</p>
         </div>
         <div className="relative overflow-x-auto sm:rounded-lg mt-2">
           <table className="w-full text-sm text-left rtl:text-right mb-2 dark:text-gray-400">
@@ -52,19 +71,23 @@ const OrderCard = ({ order, onClick }) => {
               ))}
             </tbody>
           </table>
-          <div className='pt-2 border-t text-sm font-bold flex justify-between'>
+          <div className='py-2 border-dotted border-t-2 text-sm  flex justify-between'>
+            <p>items (4)</p>
+            <p>${order.totalPrice.toFixed(2)}</p>
+          </div>
+          <div className='py-2 border-t text-sm flex justify-between'>
+            <p>Tax</p>
+            <p>$3.45</p>
+          </div>
+          <div className='pt-2 border-dotted border-t-2 text-sm font-bold flex justify-between'>
           <span>Total</span>
           <p>${order.totalPrice.toFixed(2)}</p>
         </div>
         </div>
+        <button onClick={onRequestClose} className="w-full mt-4 bg-blue-500 text-white px-3 py-2 rounded-xl hover:bg-blue-600 transition-colors duration-300">Close</button>        
       </div>
-
-      <div className="px-4 flex items-center space-x-2 text-sm font-semibold py-3">
-        <button className="bg-green-200 w-1/2 px-3 py-2 rounded-xl hover:bg-green-300 transition-colors duration-300" onClick={onClick}>See Details</button>
-        <button className="bg-blue-500 text-white w-1/2 px-3 py-2 rounded-xl hover:bg-blue-600 transition-colors duration-300">Edit Order</button>
-      </div>
-    </div>
-  )
+    </Modal>
+  );
 };
 
-export default OrderCard;
+export default OrderDetails;

@@ -6,9 +6,9 @@ import { FcCancel } from "react-icons/fc";
 
 const statusStyles = {
     Pending: { bgColor: 'bg-yellow-200', icon: <MdOutlinePending /> },
-    Cancelled: { bgColor: 'bg-red-200', icon: <FcCancel /> },
+    Rejected: { bgColor: 'bg-red-200', icon: <FcCancel /> },
     Delivered: { bgColor: 'bg-green-200', icon: <IoMdDoneAll /> },
-    Processing: { bgColor: 'bg-purple-200', icon: <BiStopwatch /> }
+    Processing: { bgColor: 'bg-purple-200', icon: <BiStopwatch /> },
 };
 
 export default statusStyles;
