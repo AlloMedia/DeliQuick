@@ -15,6 +15,19 @@ const orderSchema = new mongoose.Schema({
             message: "User does not exist sadly",
         },
     },
+    deliveryPerson: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        default: null
+    },
+    notifiedDeliveryPeople: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    deliveryAssignedAt: {
+        type: Date,
+        default: null
+    },
     items: [
         {
             item: {
@@ -39,7 +52,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Pending', 'Processing', 'Delivered', 'Cancelled', 'Rejected'],
+        enum: ['Pending', 'In Progress', 'Ready', 'Assigned', 'On the Way', 'Delivered', 'Cancelled', 'Rejected'],
         default: 'Pending'
     }
 }, {

@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema({
       message: "Role does not exist",
     },
   },
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
 }, {
   timestamps: true,
 });
