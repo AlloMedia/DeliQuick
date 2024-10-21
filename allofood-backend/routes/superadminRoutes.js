@@ -4,6 +4,7 @@ const express = require("express");
 const router = express.Router();
 
 router.post("/add", superAdminController.addRestaurant);
+router.put("/edit/:restaurantId", superAdminController.editRestaurant);
 
 // Route for rejecting or accepting a restaurant
 router.put(

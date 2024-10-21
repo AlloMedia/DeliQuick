@@ -39,7 +39,7 @@ const rejectOrAcceptRestaurant = async (req, res) => {
 const addRestaurant = async (req, res) => {
   try {
     // Use the actual SuperAdmin ID
-    const superAdminId = "6712227016522097b4a45080";
+    const superAdminId = "671630836d5a9e540f577459";
 
     // Destructure necessary fields from the request body
     const {
