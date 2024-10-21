@@ -11,9 +11,9 @@ const rejectOrAcceptRestaurant = async (req, res) => {
 
     const isAproved = req.body.isAproved;
 
-    console.log(
-      `Updating restaurant ${restaurantId} to isAproved: ${isAproved}`
-    );
+    // console.log(
+    //   `Updating restaurant ${restaurantId} to isAproved: ${isAproved}`
+    // );
 
     const restaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
@@ -115,4 +115,8 @@ const deleteRestaurant = async (req, res) => {
 };
 
 
-module.exports = { rejectOrAcceptRestaurant, addRestaurant, deleteRestaurant };
+module.exports = {
+  addRestaurant,
+  rejectOrAcceptRestaurant,  // Ensure this is exported
+  deleteRestaurant,
+};
