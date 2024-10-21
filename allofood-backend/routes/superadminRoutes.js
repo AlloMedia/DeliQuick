@@ -14,6 +14,10 @@ router.get(
   "/Restaurant/unapproved",
   RestaurantController.getUnapprovedRestaurants
 );
-// router.delete('/restaurants/:restaurantId', superAdminController.deleteRestaurant);
+router.get(
+  '/restaurants', RestaurantController.getAllRestaurants);
+
+router.delete(
+  '/restaurants/:restaurantId', superAdminController.deleteRestaurant);
 
 module.exports = router;
