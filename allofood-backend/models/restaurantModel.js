@@ -42,10 +42,8 @@ const restaurantSchema = new mongoose.Schema(
       ],
     },
     address: {
-      street: {
         type: String,
         required: true,
-      },
     },
     phone: {
       type: String,

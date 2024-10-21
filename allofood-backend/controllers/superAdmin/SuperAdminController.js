@@ -114,5 +114,71 @@ const deleteRestaurant = async (req, res) => {
   }
 };
 
+const editRestaurant = async (req, res) => {
+  try {
+    const superAdminId = "671630836d5a9e540f577459"; 
 
-module.exports = { rejectOrAcceptRestaurant, addRestaurant, deleteRestaurant };
+    // Destructure the restaurant ID from the URL parameters and the fields from the request body
+    const { restaurantId } = req.params;
+    const { user, name, description, images, address, phone, status, isApproved } = req.body;
+
+    // Check if the user making the request is the SuperAdmin
+    if (user !== superAdminId) {
+      return res.status(403).json({ message: "Accès interdit. Vous n'êtes pas autorisé à modifier ce restaurant." });
+    }
+
+    // Find the restaurant by ID and update its fields
+    const updatedRestaurant = await Restaurant.findByIdAndUpdate(
+      restaurantId,
+      { name, description, images, address, phone, status, isApproved },
+      { new: true, runValidators: true } // Return the updated document and validate the updates
+    );
+
+    // If the restaurant does not exist, return a 404 error
+    if (!updatedRestaurant) {
+      return res.status(404).json({ message: "Restaurant introuvable." });
+    }
+
+    // Respond with the updated restaurant information
+    res.status(200).json({ message: "Restaurant mis à jour avec succès.", restaurant: updatedRestaurant });
+  } catch (error) {
+    // Handle validation errors or other errors
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({ message: "Données invalides.", errors: error.errors });
+    }
+    console.error("Erreur lors de la modification du restaurant:", error);
+    res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+// Search for restaurants by name
+const searchRestaurants = async (req, res) => {
+  try {
+    const { name, address } = req.query;
+
+    if (!name && !address) {
+      return res.status(400).json({ message: "Veuillez fournir un nom ou une adresse de restaurant à rechercher." });
+    }
+    const searchRestaurant = {};
+
+    if (name) {
+      searchRestaurant.name = { $regex: new RegExp(name, "i") };
+    }
+
+    if (address) {
+      searchRestaurant.address = { $regex: new RegExp(address, "i") };
+    }
+
+    const restaurants = await Restaurant.find(searchRestaurant);
+
+    if (restaurants.length === 0) {
+      return res.status(404).json({ message: "Aucun restaurant trouvé correspondant aux critères de recherche." });
+    }
+    res.status(200).json({ message: "Restaurants trouvés avec succès.", restaurants });
+  } catch (error) {
+    console.error("Erreur lors de la recherche des restaurants:", error);
+    res.status(500).json({ message: "Erreur interne du serveur." });
+  }
+};
+
+module.exports = { rejectOrAcceptRestaurant, addRestaurant, editRestaurant, searchRestaurants };
