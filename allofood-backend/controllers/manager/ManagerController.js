@@ -2,6 +2,7 @@ const Restaurant = require("../../models/restaurantModel");
 const Category = require("../../models/categoryModel");
 const Item = require("../../models/itemModel");
 
+// Ajouter un nouvel élément de menu
 const addMenuItem = async (req, res) => {
   try {
     const { name, description, stock, price, image, categoryId, restaurantId } =
