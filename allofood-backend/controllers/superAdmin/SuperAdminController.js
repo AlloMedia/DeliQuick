@@ -36,7 +36,7 @@ const rejectOrAcceptRestaurant = async (req, res) => {
 };
 
 // Ajouter un nouveau restaurant
-exports.addRestaurant = async (req, res) => {
+const addRestaurant = async (req, res) => {
   try {
     // Use the actual SuperAdmin ID
     const superAdminId = "6712227016522097b4a45080";
@@ -92,4 +92,4 @@ exports.addRestaurant = async (req, res) => {
   }
 };
 
-module.exports = { rejectOrAcceptRestaurant };
+module.exports = { rejectOrAcceptRestaurant, addRestaurant };
