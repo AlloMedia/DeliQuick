@@ -28,14 +28,14 @@ const OrderDetails = ({ isOpen, onRequestClose, order }) => {
           </button>
         </div>
         <div className="flex items-center justify-between mb-4">
-          <div className='w-full flex items-center'>
+          <div className='flex items-center'>
             <img className="w-10 h-10 rounded-lg mr-3" src={order.user.image || defaultImg} alt={`${order.user.name} avatar`} />
             <div>
               <div className="font-semibold text-gray-900">{order.user.name}</div>
               <div className="text-sm text-gray-500">order #{order._id.slice(-4)}</div>
             </div>
           </div>
-          <div className='w-1/2 text-center'>
+          <div className='text-center'>
             <div className={`text-[0.88rem] py-1 px-3 flex items-center justify-center space-x-1 rounded-full font-bold ${bgColor}`}>
               <span>{icon}</span>
               <span>{order.status}</span>

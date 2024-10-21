@@ -1,5 +1,5 @@
 const Order = require('../../models/orderModel');
-// const User = require('../../models/userModel');
+const { notifyDelivery } = require('../delivery/DeliveryController');
 
 const getAllOrders = async (req, res) => {
   try {
@@ -29,6 +29,11 @@ const updateOrderStatus = async (req, res) => {
 
     order.status = status;
     await order.save();
+
+    if (status === 'Ready') {
+      await notifyDelivery(order._id);
+      console.log('Notified delivery people');
+    }
 
     res.status(200).json({ message: 'Order status updated successfully', order });
   } catch (error) {
