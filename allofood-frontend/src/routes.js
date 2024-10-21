@@ -4,22 +4,17 @@ import React from "react";
 import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
-import DataTables from "views/admin/tables";
 import RTLDefault from "views/rtl/default";
 
-// Auth Imports
-import SignIn from "views/auth/SignIn";
 
 // Icon Imports
 import {
   MdHome,
-  MdOutlineShoppingCart,
-  MdBarChart,
   MdPerson,
-  MdLock,
 } from "react-icons/md";
 import Orders from "views/admin/orders";
-import Restaurant from "views/superadmin/Restaurant";
+import Requests from "views/superadmin/Requests";
+import Restaurants from "views/superadmin/Restaurants";
 
 const routes = [
   {
@@ -45,11 +40,18 @@ const routes = [
     component: <Orders />,
   },
   {
+    name: "Requests",
+    layout: "/admin",
+    path: "Requests",
+    icon: <i class="bi bi-bell-fill"></i>,
+    component: <Requests />,
+  },
+  {
     name: "Restaurants",
     layout: "/admin",
-    path: "sign-in",
+    path: "Restaurants",
     icon: <i class="bi bi-shop"></i>,
-    component: <Restaurant />,
+    component: <Restaurants />,
   },
   {
     name: "Categories",
