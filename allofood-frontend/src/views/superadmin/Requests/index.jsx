@@ -3,8 +3,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import axiosInstance from '../../../api/config/axios';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Orders = () => {
-  const [orders, setOrders] = React.useState([]);
+const Requests = () => {
+  const [requests, setRequests] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
@@ -15,7 +15,7 @@ const Orders = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.get('/superadmin/Restaurant/unapproved');
-      setOrders(response.data);
+      setRequests(response.data);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching unapproved restaurants:", error);
@@ -36,17 +36,16 @@ const Orders = () => {
 
   return (
     <div className="mt-5">
-      <ToastContainer /> {/* Toast container to render the toast messages */}
+      <ToastContainer />
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-              
               <th scope="col" className="px-6 py-3">Name</th>
               <th scope="col" className="px-6 py-3">Description</th>
               <th scope="col" className="px-6 py-3">Phone</th>
               <th scope="col" className="px-6 py-3">Status</th>
-              <th scope="col" className="p-4">Actions</th> {/* Actions column now last */}
+              <th scope="col" className="p-4">Actions</th> 
             </tr>
           </thead>
           <tbody>
@@ -55,18 +54,18 @@ const Orders = () => {
                 <td colSpan="5" className="text-center py-4">Loading...</td>
               </tr>
             ) : (
-              orders.map((order) => (
-                <tr key={order._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+              requests.map((request) => (
+                <tr key={request._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {order.name}
+                    {request.name}
                   </th>
-                  <td className="px-6 py-4">{order.description}</td>
-                  <td className="px-6 py-4">{order.phone}</td>
-                  <td className="px-6 py-4">{order.isAproved ? 'Approved' : 'Not Approved'}</td>
+                  <td className="px-6 py-4">{request.description}</td>
+                  <td className="px-6 py-4">{request.phone}</td>
+                  <td className="px-6 py-4">{request.isAproved ? 'Approved' : 'Not Approved'}</td>
                   <td className="px-6 py-4"> {/* Actions cell now last */}
                     <select
-                      value={order.isAproved ? 'approved' : 'not-approved'}
-                      onChange={(e) => updateApprovalStatus(order._id, e.target.value === 'approved')}
+                      value={request.isAproved ? 'approved' : 'not-approved'}
+                      onChange={(e) => updateApprovalStatus(request._id, e.target.value === 'approved')}
                       className="border border-gray-300 rounded p-2"
                     >
                       <option value="not-approved">Reject</option>
@@ -83,4 +82,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default Requests;

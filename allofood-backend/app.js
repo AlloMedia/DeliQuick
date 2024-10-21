@@ -3,7 +3,6 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
-const mongoose = require("mongoose"); // Import mongoose
 require("dotenv").config();
 const cors = require("cors");
 

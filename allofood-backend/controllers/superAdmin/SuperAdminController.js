@@ -92,6 +92,27 @@ const addRestaurant = async (req, res) => {
   }
 };
 
+const deleteRestaurant = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      return res.status(400).json({ message: "Invalid restaurant ID format" });
+    }
+
+
+    const restaurant = await Restaurant.findByIdAndDelete(restaurantId);
+
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    return res.status(200).json({ message: "Restaurant deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting restaurant:", error);
+    return res.status(500).json({ message: "An error occurred while deleting the restaurant" });
+  }
+};
 
 const editRestaurant = async (req, res) => {
   try {
@@ -159,7 +180,5 @@ const searchRestaurants = async (req, res) => {
     res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
-
-
 
 module.exports = { rejectOrAcceptRestaurant, addRestaurant, editRestaurant, searchRestaurants };
