@@ -7,6 +7,7 @@ router.post("/add", superAdminController.addRestaurant);
 router.put("/edit/:restaurantId", superAdminController.editRestaurant);
 router.get("/search", superAdminController.searchRestaurants);
 
+
 // Route for rejecting or accepting a restaurant
 router.put(
   "/restaurants/reject-or-accept/:restaurantId",
