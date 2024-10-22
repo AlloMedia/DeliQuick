@@ -3,17 +3,17 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
+const orderRoutes = require('./routes/userRoutes');  // Correct route
+
 require("dotenv").config();
 const cors = require("cors");
 
-// const userRoutes = require('./routes/userRoutes');
-// const deliveryRoutes = require('./routes/deliveryRoutes');
 const managerRoutes = require("./routes/managerRoutes");
 
 const app = express();
 const PORT = process.env.PORT;
 
-// Connect to the database (make sure this is called from your config/db.js)
+// Connect to the database
 require("./config/db").connect();
 
 app.use(express.json());
@@ -32,9 +32,8 @@ app.use(
 // Routes:
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
-// app.use('/user', userRoutes);
-// app.use('/delivery', deliveryRoutes);
 app.use("/manager", managerRoutes);
+app.use('/api', orderRoutes);  // Using the correct route
 
 // Start the server after connecting to the database
 if (process.env.NODE_ENV !== "test") {
