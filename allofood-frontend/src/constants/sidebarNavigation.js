@@ -4,8 +4,9 @@ import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
 import Orders from "views/admin/orders";
-import Restaurant from "views/superadmin/Restaurant";
+import Restaurant from "views/superadmin/Restaurants";
 import RTLDefault from "views/rtl/default";
+import Requests from "views/superadmin/Requests";
 
 const allRoutes = [
   {
@@ -22,6 +23,14 @@ const allRoutes = [
     component: NFTMarketplace,
     secondary: true,
     roles: ["superAdmin"],
+  },
+  {
+    name: "Requests",
+    layout: "/admin",
+    path: "Requests",
+    icon: <i class="bi bi-bell-fill"></i>,
+    component: Requests,
+    roles:["superAdmin"]
   },
   {
     name: "Orders",

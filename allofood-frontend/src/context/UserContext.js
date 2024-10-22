@@ -35,7 +35,7 @@ const getUserRoleFromAPI = async () => {
   // Simulate an API call
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve('delivery');
+      resolve('superAdmin');
     }, 1000);
   });
 };
