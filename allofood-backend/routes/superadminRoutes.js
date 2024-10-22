@@ -2,8 +2,9 @@ const superAdminController = require("../controllers/superAdmin/SuperAdminContro
 const RestaurantController = require("../controllers/superAdmin/RestaurantController");
 const express = require("express");
 const router = express.Router();
+const { addRestaurant, upload } = require('../controllers/superAdmin/SuperAdminController');
 
-router.post("/add", superAdminController.addRestaurant);
+router.post('/add', upload, addRestaurant);
 router.put("/edit/:restaurantId", superAdminController.editRestaurant);
 router.get("/search", superAdminController.searchRestaurants);
 
