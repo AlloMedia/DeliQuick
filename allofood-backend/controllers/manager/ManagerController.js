@@ -48,4 +48,4 @@ const addMenuItem = async (req, res) => {
   }
 };
 
-module.exports = { addMenuItem };
+module.exports = { addMenuItem, editMenuItem, deleteMenuItem };
