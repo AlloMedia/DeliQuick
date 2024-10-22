@@ -4,6 +4,9 @@ const express = require("express");
 const router = express.Router();
 
 router.post("/add", superAdminController.addRestaurant);
+router.put("/edit/:restaurantId", superAdminController.editRestaurant);
+router.get("/search", superAdminController.searchRestaurants);
+
 
 // Route for rejecting or accepting a restaurant
 router.put(
@@ -14,6 +17,10 @@ router.get(
   "/Restaurant/unapproved",
   RestaurantController.getUnapprovedRestaurants
 );
-// router.delete('/restaurants/:restaurantId', superAdminController.deleteRestaurant);
+router.get(
+  '/restaurants', RestaurantController.getAllRestaurants);
+
+router.delete(
+  '/restaurants/:restaurantId', superAdminController.deleteRestaurant);
 
 module.exports = router;
