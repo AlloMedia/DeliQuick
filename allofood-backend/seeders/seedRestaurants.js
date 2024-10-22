@@ -23,9 +23,7 @@ module.exports = async () => {
                     profileImage: "profile.jpg",
                     slides: ["slide1.jpg", "slide2.jpg"],
                 },
-                address: {
-                    street: "123 Main St",
-                },
+                address: "123 Main St",
                 phone: "0123456789",
                 status: "open",
                 isAproved:false
@@ -40,9 +38,7 @@ module.exports = async () => {
                     profileImage: "profile.jpg",
                     slides: ["slide1.jpg", "slide2.jpg"],
                 },
-                address: {
-                    street: "456 Main St",
-                },
+                address: "456 Main St" ,           
                 phone: "0123456789",
                 status: "open",
                 isAproved:false

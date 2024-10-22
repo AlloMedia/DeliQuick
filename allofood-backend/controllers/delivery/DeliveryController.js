@@ -30,7 +30,7 @@ const notifyDelivery = async (orderId) => {
 
     // Send email notifications with token
     const emailPromises = availableDeliveryPeople.map((deliveryPerson) =>
-        mailDelivery(
+      mailDelivery(
         deliveryPerson.email,
         "New Order Available",
         order._id,
@@ -46,7 +46,10 @@ const notifyDelivery = async (orderId) => {
 
     return availableDeliveryPeople;
   } catch (error) {
-    console.error(`Error notifying delivery people for order ${orderId}:`, error);
+    console.error(
+      `Error notifying delivery people for order ${orderId}:`,
+      error
+    );
     throw error;
   }
 };
