@@ -7,7 +7,7 @@ require("dotenv").config();
 const cors = require("cors");
 
 // const userRoutes = require('./routes/userRoutes');
-// const deliveryRoutes = require('./routes/deliveryRoutes');
+const deliveryRoutes = require('./routes/deliveryRoutes');
 const managerRoutes = require("./routes/managerRoutes");
 
 const app = express();
@@ -33,7 +33,7 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 // app.use('/user', userRoutes);
-// app.use('/delivery', deliveryRoutes);
+app.use('/delivery', deliveryRoutes);
 app.use("/manager", managerRoutes);
 
 // Start the server after connecting to the database
