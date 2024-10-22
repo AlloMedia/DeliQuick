@@ -93,4 +93,38 @@ const editMenuItem = async (req, res) => {
   }
 };
 
+const deleteMenuItem = async (req, res) => {
+  try {
+    const { token, id } = req.params;
+
+    const userId = jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+      if (err) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      return userId._id;
+    });
+
+    const user = await User.findById(userId);
+
+    if (!id) {
+      return res.status(400).json({ message: "Item ID is required" });
+    }
+
+    if (!user || user.role !== "manager") {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const item = await Item.findById(id);
+
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+
+    await item.remove();
+    return res.status(200).json({ message: "Item deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = { addMenuItem, editMenuItem, deleteMenuItem };

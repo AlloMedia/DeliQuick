@@ -8,5 +8,6 @@ router.get("/orders", orderController.getAllOrders);
 router.put("/orders/:id", orderController.updateOrderStatus);
 router.post("/items/create", managerController.addMenuItem);
 router.put("/items/edit/:id", managerController.editMenuItem);
+router.delete("/items/delete/:id", managerController.deleteMenuItem);
 
 module.exports = router;
