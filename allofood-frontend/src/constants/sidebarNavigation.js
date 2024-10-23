@@ -7,6 +7,7 @@ import Orders from "views/admin/orders";
 import Restaurant from "views/superadmin/Restaurants";
 import RTLDefault from "views/rtl/default";
 import Requests from "views/superadmin/Requests";
+import DeliveryRequests from "views/delivery/requests";
 
 const allRoutes = [
   {
@@ -26,11 +27,17 @@ const allRoutes = [
   },
   {
     name: "Requests",
-    layout: "/admin",
-    path: "Requests",
+    path: "requests",
     icon: <i class="bi bi-bell-fill"></i>,
     component: Requests,
     roles:["superAdmin"]
+  },
+  {
+    name: "Requests",
+    path: "requests",
+    icon: <i class="bi bi-bell-fill"></i>,
+    component: DeliveryRequests,
+    roles:["delivery"]
   },
   {
     name: "Orders",
