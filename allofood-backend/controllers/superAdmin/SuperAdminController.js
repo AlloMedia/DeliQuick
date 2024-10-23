@@ -1,6 +1,18 @@
 const mongoose = require("mongoose");
 const Restaurant = require("../../models/restaurantModel");
+const multer = require('multer');
+const path = require('path');
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); 
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 const rejectOrAcceptRestaurant = async (req, res) => {
   try {
     const restaurantId = req.params.restaurantId;
@@ -38,31 +50,37 @@ const rejectOrAcceptRestaurant = async (req, res) => {
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {
-    // Use the actual SuperAdmin ID
-    const superAdminId = "671630836d5a9e540f577459";
+    const superAdminId = "671789397a9fea151bdbe408";
 
-    // Destructure necessary fields from the request body
     const {
       user,
       name,
       description,
-      images,
       address,
       phone,
       status,
       isApproved,
     } = req.body;
 
-    // Check if the user making the request is the SuperAdmin
     if (user !== superAdminId) {
       return res.status(403).json({
-        message:
-          "Accès interdit. Vous n'êtes pas autorisé à ajouter des restaurants.",
+        message: "Accès interdit. Vous n'êtes pas autorisé à ajouter des restaurants.",
       });
     }
 
-    // Create a new restaurant
-    const newRestaurant = new Restaurant({
+    const images = {
+      banner: req.files && req.files['banner'] ? req.files['banner'][0].path : '',
+      profileImage: req.files && req.files['profileImage'] ? req.files['profileImage'][0].path : '',
+      slides: req.files && req.files['slides'] ? req.files['slides'].map(file => file.path) : [],
+    };
+    
+    if (!images.banner || !images.profileImage || images.slides.length === 0) {
+      return res.status(400).json({
+        message: "Les images du restaurant sont requises (banner, profileImage, et au moins une slide).",
+      });
+    }
+
+    const restaurantData = {
       name,
       description,
       user,
@@ -71,16 +89,16 @@ const addRestaurant = async (req, res) => {
       phone,
       status,
       isApproved,
-    });
+    };
 
-    // Save the restaurant to the database
+    const newRestaurant = new Restaurant(restaurantData);
     await newRestaurant.save();
 
-    // Respond with the created restaurant information
     res.status(201).json({
       message: "Restaurant ajouté avec succès.",
       restaurant: newRestaurant,
     });
+
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       return res
@@ -88,9 +106,11 @@ const addRestaurant = async (req, res) => {
         .json({ message: "Données invalides.", errors: error.errors });
     }
     console.error("Erreur lors de l'ajout du restaurant:", error);
-    res.status(500).json({ message: "Erreur interne du serveur." });
+    res.status(500).json({ message: "Erreur interne du serveur.", error: error.message });
   }
 };
+
+
 
 const deleteRestaurant = async (req, res) => {
   try {
@@ -181,4 +201,9 @@ const searchRestaurants = async (req, res) => {
   }
 };
 
-module.exports = { rejectOrAcceptRestaurant, addRestaurant, editRestaurant, searchRestaurants, deleteRestaurant };
+module.exports = { rejectOrAcceptRestaurant, addRestaurant,
+  upload: upload.fields([
+    { name: 'banner', maxCount: 1 },
+    { name: 'profileImage', maxCount: 1 },
+    { name: 'slides', maxCount: 10 },
+  ]), editRestaurant, searchRestaurants, deleteRestaurant };

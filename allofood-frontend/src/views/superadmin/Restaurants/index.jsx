@@ -1,11 +1,13 @@
 import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../api/config/axios';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Restaurants = () => {
   const [restaurants, setRestaurants] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     fetchAllRestaurants();
@@ -37,6 +39,15 @@ const Restaurants = () => {
   return (
     <div className="mt-5">
       <ToastContainer /> {/* Toast container to render the toast messages */}
+      <div className="mb-4">
+        <button
+          onClick={() => navigate('/add-restaurant')}
+          className="text-white bg-blue-600 hover:bg-blue-700 p-2 rounded"
+        >
+          Go to Add Restaurant
+        </button>
+      </div>
+
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
