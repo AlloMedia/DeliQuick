@@ -1,30 +1,48 @@
+const mongoose = require('mongoose');
 const Order = require("../../models/orderModel");
 const Item = require("../../models/itemModel");
 
-// Create order for a client
 exports.createOrder = async (req, res) => {
   try {
-    // Extract authenticated user's ID from authMiddleware
-    const userId = req.user._id;  // user is added by authMiddleware
-
+    const userId = req.user._id; // Ensure that req.user is populated via authMiddleware
     const { items } = req.body;
 
-    // Validate items
-    const itemIds = items.map((item) => item.itemId);
-    const foundItems = await Item.find({ _id: { $in: itemIds }, stock: { $gte: 1 } });
+    // Ensure the items array is not empty
+    if (!items || items.length === 0) {
+      return res.status(400).json({ message: "No items provided in the order" });
+    }
+
+    // Convert itemId strings to ObjectId
+    const itemIds = items.map((item) => mongoose.Types.ObjectId(item.itemId));
+
+    // Find items that match the provided IDs and are in stock
+    const foundItems = await Item.find({
+      _id: { $in: itemIds },
+      stock: { $gte: 1 }, // Ensure items are in stock
+    });
+
+    if (!foundItems || foundItems.length === 0) {
+      return res.status(404).json({ message: "Items not found or out of stock" });
+    }
 
     if (foundItems.length !== items.length) {
       return res.status(400).json({ message: "Some items were not found or are out of stock" });
     }
 
-    // Calculate total price
-    const totalPrice = items.reduce((acc, item) => {
+    // Calculate total price and check stock availability
+    let totalPrice = 0;
+    for (const item of items) {
       const foundItem = foundItems.find((i) => i._id.equals(item.itemId));
-      return acc + foundItem.price * item.quantity;
-    }, 0);
+      if (!foundItem || foundItem.stock < item.quantity) {
+        return res.status(400).json({
+          message: `Item ${item.itemId} is out of stock or insufficient quantity`,
+        });
+      }
+      totalPrice += foundItem.price * item.quantity;
+    }
 
-    // Deduct stock for each item
-    for (let item of items) {
+    // Update stock for each item
+    for (const item of items) {
       const foundItem = foundItems.find((i) => i._id.equals(item.itemId));
       foundItem.stock -= item.quantity;
       await foundItem.save();
@@ -50,6 +68,6 @@ exports.createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Error placing order:", error);
-    res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };

@@ -180,4 +180,4 @@ const searchRestaurants = async (req, res) => {
   }
 };
 
-module.exports = { rejectOrAcceptRestaurant, addRestaurant, editRestaurant, searchRestaurants,deleteRestaurant };
+module.exports = { rejectOrAcceptRestaurant, addRestaurant, editRestaurant, searchRestaurants, deleteRestaurant };

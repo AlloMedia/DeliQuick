@@ -8,6 +8,8 @@ const orderRoutes = require('./routes/userRoutes');  // Correct route
 require("dotenv").config();
 const cors = require("cors");
 
+// const userRoutes = require('./routes/userRoutes');
+// const deliveryRoutes = require('./routes/deliveryRoutes');
 const managerRoutes = require("./routes/managerRoutes");
 
 const app = express();
@@ -30,6 +32,7 @@ app.use(
 );
 
 // Routes:
+
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
