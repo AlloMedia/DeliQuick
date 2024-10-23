@@ -1,55 +1,39 @@
-const Order = require("../../models/orderModel");
-const Item = require("../../models/itemModel");
+// const Order = require("../../models/orderModel");
 
-// Create order for a client
-exports.createOrder = async (req, res) => {
+// Import the Restaurant model (you might have a specific file for this model)
+const Restaurant = require("../../models/restaurantModel");
+
+const searchRestaurants = async (req, res) => {
   try {
-    // Extract authenticated user's ID from authMiddleware
-    const userId = req.user._id;  // user is added by authMiddleware
+    const { name, address } = req.query;
 
-    const { items } = req.body;
+    if (!name && !address) {
+      return res.status(400).json({ message: "Veuillez fournir un nom ou une adresse de restaurant à rechercher." });
+    }
+    
+    const searchRestaurant = {};
 
-    // Validate items
-    const itemIds = items.map((item) => item.itemId);
-    const foundItems = await Item.find({ _id: { $in: itemIds }, stock: { $gte: 1 } });
-
-    if (foundItems.length !== items.length) {
-      return res.status(400).json({ message: "Some items were not found or are out of stock" });
+    if (name) {
+      searchRestaurant.name = { $regex: new RegExp(name, "i") };
     }
 
-    // Calculate total price
-    const totalPrice = items.reduce((acc, item) => {
-      const foundItem = foundItems.find((i) => i._id.equals(item.itemId));
-      return acc + foundItem.price * item.quantity;
-    }, 0);
-
-    // Deduct stock for each item
-    for (let item of items) {
-      const foundItem = foundItems.find((i) => i._id.equals(item.itemId));
-      foundItem.stock -= item.quantity;
-      await foundItem.save();
+    if (address) {
+      searchRestaurant.address = { $regex: new RegExp(address, "i") };
     }
 
-    // Create new order
-    const newOrder = new Order({
-      user: userId,
-      items: items.map((item) => ({
-        item: item.itemId,
-        quantity: item.quantity,
-        price: foundItems.find((i) => i._id.equals(item.itemId)).price,
-      })),
-      totalPrice,
-      status: "Pending", // Default status for new orders
-    });
+    const restaurants = await Restaurant.find(searchRestaurant);
 
-    await newOrder.save();
-
-    return res.status(201).json({
-      message: "Order placed successfully",
-      order: newOrder,
-    });
+    if (restaurants.length === 0) {
+      return res.status(404).json({ message: "Aucun restaurant trouvé correspondant aux critères de recherche." });
+    }
+    
+    res.status(200).json({ message: "Restaurants trouvés avec succès.", restaurants });
   } catch (error) {
-    console.error("Error placing order:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Erreur lors de la recherche des restaurants:", error);
+    res.status(500).json({ message: "Erreur interne du serveur." });
   }
+};
+
+module.exports = {
+  searchRestaurants,
 };

@@ -1,10 +1,9 @@
-const clientController = require("../controllers/client/clientController");
-const authMiddleware = require("../middlewares/authMiddleware");  // Assuming you have this implemented
-
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const clientController = require('../controllers/client/ClientController');
+// const authMiddleware = require('../middlewares/authMiddleware');  
 
-router.post("/order", authMiddleware, clientController.createOrder);
-
+// router.post('/order', authMiddleware, clientController.createOrder);
+router.get('/search', clientController.searchRestaurants);
 
 module.exports = router;
