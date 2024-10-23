@@ -1,20 +1,16 @@
 //App.jsx
 import React from "react";
-import RouterComponent from "./router";
-import RtlLayout from "layouts/rtl";
-import AdminLayout from "layouts/admin";
-import AuthLayout from "layouts/auth";
-import AddRestaurant from "views/superadmin/Restaurants/AddRestaurant";
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/auth/AuthContext';
+import Router from "./router";
 
 const App = () => {
   return (
-    <Routes>
-      <Route path="auth/*" element={<AuthLayout />} />
-      <Route path="admin/*" element={<AdminLayout />} />
-      <Route path="rtl/*" element={<RtlLayout />} />
-      <Route path="/" element={<Navigate to="/admin" replace />} />
-      <Route path="/add-restaurant" element={<AddRestaurant />} />
-    </Routes>
+    <BrowserRouter>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

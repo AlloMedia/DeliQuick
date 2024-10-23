@@ -36,6 +36,14 @@ function validateRegister(body) {
                 'any.only': ERROR_MESSAGES.passwordMatch,
                 'any.required': ERROR_MESSAGES.required('Confirm Password')
             }),
+        address: Joi
+            .string()
+            .pattern(REGEX.ADDRESS)
+            .required()
+            .messages({
+                'string.pattern.base': ERROR_MESSAGES.address,
+                'any.required': ERROR_MESSAGES.required('address')
+            }),
         phone: Joi
             .string()
             .pattern(REGEX.PHONE)

@@ -2,29 +2,41 @@ import React, { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "../layouts/dashboard";
 import { filterRoutesByRole } from "../utils/routeUtils";
-import { useUser } from "../context/UserContext";
+import { useAuth } from "../context/auth/AuthContext";
 import allRoutes from "../constants/sidebarNavigation";
 import ProtectedRoute from "../components/ProtectedRoute";
 
-const RouterComponent = () => {
-  const userRole = useUser();
+import Register from "../views/auth/register";
+import Login from "../views/auth/login";
+import OtpVerification from "../views/auth/otp-verification";
+import ForgotPassword from "../views/auth/forgot-password";
+import ResetPassword from "../views/auth/reset-password";
+import NotFound from "../views/errors/404-error";
+import RoleSelection from "../components/auth/RoleSelection";
+import PublicRoute from "../components/auth/PublicRoute";
+import Index from "../views";
+import HomeLayout from "../layouts/home";
+
+const Router = () => {
+  const { user, isLoading } = useAuth();
   const [routes, setRoutes] = useState([]);
 
   useEffect(() => {
-    if (userRole) {
-      const filteredRoutes = filterRoutesByRole(allRoutes, userRole);
+    if (user && user.role) {
+      const filteredRoutes = filterRoutesByRole(allRoutes, user.role);
       setRoutes(filteredRoutes);
     }
-  }, [userRole]);
+  }, [user]);
 
-  if (!userRole) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
     <Routes>
-      {/* Base route with role */}
-      <Route path={`/${userRole.toLowerCase()}`} element={<Layout />}>
+      {/* Protected Dashboard Routes */}
+      {user && user.role && (
+        <Route path={`/${user.role.toLowerCase()}`} element={<Layout />}>
         {/* Default redirect */}
         <Route index element={<Navigate to="dashboard" replace />} />
 
@@ -39,17 +51,61 @@ const RouterComponent = () => {
           />
         ))}
       </Route>
+      )}
 
-      {/* Root redirect */}
+      {/* Public Routes */}
+      <Route path="/" element={<HomeLayout />}>
+        <Route index element={<Index />} />
+        <Route
+          path="/role-selection"
+          element={
+            <PublicRoute>
+              <RoleSelection />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/otp-verification"
+          element={
+            <PublicRoute>
+              <OtpVerification />
+            </PublicRoute>
+          }
+        />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      </Route>
+
+      {/* Auth Routes */}
       <Route
-        path="/"
-        element={<Navigate to={`/${userRole.toLowerCase()}`} replace />}
+        path="/register"
+        element={
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        }
+      />
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
       />
 
-      {/* Catch all route for 404 */}
-      <Route path="*" element={<p>Not found</p>} />
+      {/* Root redirect for authenticated users */}
+      {user && user.role && (
+        <Route
+          path="/"
+          element={<Navigate to={`/${user.role.toLowerCase()}`} replace />}
+        />
+      )}
+
+      {/* 404 Route */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
 
-export default RouterComponent;
+export default Router;

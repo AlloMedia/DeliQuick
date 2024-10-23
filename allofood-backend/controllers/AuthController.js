@@ -34,6 +34,7 @@ async function register(req, res) {
     email: req.body.email,
     password: hashedPassword,
     role: role._id,
+    address: req.body.address,
     phone: req.body.phone,
   });
 
@@ -97,7 +98,7 @@ async function login(req, res) {
     if (!validPass)
       return res.status(400).json({ error: "Invalid email or password" });
 
-    if (!user.is_verified) {
+    if (!user.isVerified) {
       const emailSent = await sendVerificationEmail(
         user,
         req.body.email,
