@@ -2,7 +2,9 @@ import React from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../../api/config/axios';
+import Swal from 'sweetalert2';
 import 'react-toastify/dist/ReactToastify.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 const Restaurants = () => {
   const [restaurants, setRestaurants] = React.useState([]);
@@ -26,13 +28,37 @@ const Restaurants = () => {
   };
 
   const deleteRestaurant = async (restaurantId) => {
-    try {
-      const response = await axiosInstance.delete(`/superadmin/restaurants/${restaurantId}`);
-      toast.success(response.data.message); // Notify success
-      fetchAllRestaurants(); // Refresh list after deletion
-    } catch (error) {
-      console.error("Error deleting restaurant:", error.response); // Log the full error response
-      toast.error("Failed to delete restaurant: " + (error.response?.data?.message || error.message)); // Notify error
+    // Show confirmation dialog using SweetAlert2
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to delete this restaurant? This action cannot be undone.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axiosInstance.delete(`/superadmin/restaurants/${restaurantId}`);
+        toast.success(response.data.message); // Notify success
+        fetchAllRestaurants(); // Refresh list after deletion
+
+        // Show success message in SweetAlert2
+        Swal.fire({
+          title: 'Deleted!',
+          text: 'The restaurant has been deleted.',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+        });
+      } catch (error) {
+        console.error("Error deleting restaurant:", error.response); // Log the full error response
+        toast.error("Failed to delete restaurant: " + (error.response?.data?.message || error.message)); // Notify error
+      }
+    } else {
+      toast.info('Restaurant deletion canceled'); // Notify cancellation
     }
   };
 

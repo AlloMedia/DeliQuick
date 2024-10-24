@@ -3,7 +3,7 @@ const User = require("../../models/userModel");
 const Role = require("../../models/roleModel");
 const { mailDelivery } = require("../../helpers/mailDelivery");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken"); 
 
 const notifyDelivery = async (orderId) => {
   try {

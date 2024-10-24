@@ -1,12 +1,12 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useUser } from '../context/UserContext';
+import { useAuth } from '../context/auth/AuthContext';
 
 const ProtectedRoute = ({ Component, roles, ...rest }) => {
-  const userRole = useUser();
+  const { user } = useAuth();
 
-  if (!roles.includes(userRole)) {
-    return <Navigate to="/not-found" />;
+  if (!user || !roles.includes(user.role)) {
+    return <Navigate to="login" />;
   }
 
   return <Component {...rest} />;
