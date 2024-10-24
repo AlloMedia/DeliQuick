@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-import ava_01 from '../../../assets/img/ava-1.jpg';
-import ava_02 from '../../../assets/img/ava-2.jpg';
-import ava_03 from '../../../assets/img/ava-3.jpg';
+import ava_01 from 'assets/images/ava-1.jpg';
+import ava_02 from 'assets/images/ava-2.jpg';
+import ava_03 from 'assets/images/ava-3.jpg';
 
 const testimonials = [
   {
