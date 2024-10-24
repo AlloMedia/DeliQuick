@@ -3,12 +3,12 @@ import { HiX } from "react-icons/hi";
 import Links from "./components/Links";
 import SidebarCard from "components/sidebar/componentsrtl/SidebarCard";
 import { getRoutesByRole } from "../../constants/sidebarNavigation";
-import { useUser } from "../../context/UserContext";
+import { useAuth } from "../../context/auth/AuthContext";
 
 const Sidebar = ({ open, onClose }) => {
-  const userRole = useUser();
-  const routes = getRoutesByRole(userRole);
-  
+  const { user } = useAuth();
+  const routes = user ? getRoutesByRole(user.role) : [];
+
   return (
     <div
       className={`sm:none duration-175 linear fixed !z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:!bg-navy-800 dark:text-white md:!z-50 lg:!z-50 xl:!z-0 ${

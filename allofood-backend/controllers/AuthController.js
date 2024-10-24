@@ -34,6 +34,7 @@ async function register(req, res) {
     email: req.body.email,
     password: hashedPassword,
     role: role._id,
+    address: req.body.address,
     phone: req.body.phone,
   });
 

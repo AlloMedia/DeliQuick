@@ -1,10 +1,16 @@
 //App.jsx
 import React from "react";
-import RouterComponent from "./router";
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/auth/AuthContext';
+import Router from "./router";
 
 const App = () => {
   return (
-    <RouterComponent />
+    <BrowserRouter>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </BrowserRouter>
   );
 };
 

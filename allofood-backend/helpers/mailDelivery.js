@@ -7,7 +7,7 @@ const mailDelivery = async (to, subject, orderId, deliveryPersonId) => {
   });
 
   const queryParam = encodeURIComponent(token);
-  const acceptUrl = `${process.env.BACKEND_URL}/delivery/accept?token=${queryParam}`;
+  const acceptUrl = `${process.env.FRONTEND_URL}/delivery/requests?token=${queryParam}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
