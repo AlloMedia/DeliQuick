@@ -208,19 +208,8 @@ const searchRestaurants = async (req, res) => {
     if (!query) {
       return res.status(400).json({ message: "Veuillez fournir un terme de recherche." });
     }
-    const { name, address } = req.query;
-    if (!name && !address) {
-      return res.status(400).json({
-        message:
-          "Veuillez fournir un nom ou une adresse de restaurant à rechercher.",
-      });
-    }
-    const searchRestaurant = {};
 
-    if (name) {
-      searchRestaurant.name = { $regex: new RegExp(name, "i") };
-    }
-
+    // Search for restaurants by name or address matching the query
     const searchRegex = new RegExp(query, "i");
     const restaurants = await Restaurant.find({
       $or: [
@@ -230,19 +219,15 @@ const searchRestaurants = async (req, res) => {
     });
 
     if (restaurants.length === 0) {
-      return res.status(404).json({
-        message:
-          "Aucun restaurant trouvé correspondant aux critères de recherche.",
-      });
+      return res.status(404).json({ message: "Aucun restaurant trouvé correspondant aux critères de recherche." });
     }
-    res
-      .status(200)
-      .json({ message: "Restaurants trouvés avec succès.", restaurants });
+    res.status(200).json({ message: "Restaurants trouvés avec succès.", restaurants });
   } catch (error) {
     console.error("Erreur lors de la recherche des restaurants:", error);
     res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
+
 
 module.exports = {
   rejectOrAcceptRestaurant,
