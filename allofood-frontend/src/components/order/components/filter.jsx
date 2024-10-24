@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useAuth } from "context/auth/AuthContext";
 
 const FilterAndSearch = ({ onFilter }) => {
     const [selectedStatus, setSelectedStatus] = useState("");
+    const { user } = useAuth();
 
     const handleFilter = (status) => {
         setSelectedStatus(status);
@@ -23,13 +25,36 @@ const FilterAndSearch = ({ onFilter }) => {
             >
                 All
             </button>
-            <button
-                type="button"
-                className={getButtonClass("Pending")}
-                onClick={() => handleFilter("Pending")}
-            >
-                Pending
-            </button>
+            {
+                user.role === "delivery" 
+                    ?
+                        <button
+                            type="button"
+                            className={getButtonClass("Assigned")}
+                            onClick={() => handleFilter("Assigned")}
+                        >
+                            Assigned
+                        </button>
+                    : 
+                        <>
+                            <button
+                                type="button"
+                                className={getButtonClass("Pending")}
+                                onClick={() => handleFilter("Pending")}
+                            >
+                                Pending
+                            </button>
+
+                            <button
+                                type="button"
+                                className={getButtonClass("Rejected")}
+                                onClick={() => handleFilter("Rejected")}
+                            >
+                                Rejected
+                            </button>
+                        </>
+            }
+            
             <button
                 type="button"
                 className={getButtonClass("Delivered")}
@@ -37,13 +62,7 @@ const FilterAndSearch = ({ onFilter }) => {
             >
                 Delivered
             </button>
-            <button
-                type="button"
-                className={getButtonClass("Rejected")}
-                onClick={() => handleFilter("Rejected")}
-            >
-                Rejected
-            </button>
+            
         </div>
     );
 };

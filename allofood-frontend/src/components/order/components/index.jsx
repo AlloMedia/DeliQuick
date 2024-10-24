@@ -1,6 +1,6 @@
-import defaultImg from '../../../../assets/img/avatars/avatar1.png';
-import { formatDate, formatTime } from '../../../../helpers/date-format';
-import statusStyles from '../../../../helpers/status-data';
+import defaultImg from 'assets/img/avatars/avatar1.png';
+import { formatDate, formatTime } from 'helpers/date-format';
+import statusStyles from 'helpers/status-data';
 
 const OrderCard = ({ order, onClick, onEdit }) => {
   const { bgColor, icon } = statusStyles[order.status] || {};
