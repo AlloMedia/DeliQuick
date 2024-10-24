@@ -5,6 +5,8 @@ import { filterRoutesByRole } from "../utils/routeUtils";
 import { useUser } from "../context/UserContext";
 import allRoutes from "../constants/sidebarNavigation";
 import ProtectedRoute from "../components/ProtectedRoute";
+import AddRestaurant from "../views/superadmin/Restaurants/AddRestaurant";
+import EditRestaurant from "views/superadmin/Restaurants/EditRestaurant";
 
 const RouterComponent = () => {
   const userRole = useUser();
@@ -45,6 +47,10 @@ const RouterComponent = () => {
         path="/"
         element={<Navigate to={`/${userRole.toLowerCase()}`} replace />}
       />
+
+      <Route path="/add-restaurant" element={<AddRestaurant />} />
+      <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
+
 
       {/* Catch all route for 404 */}
       <Route path="*" element={<p>Not found</p>} />
