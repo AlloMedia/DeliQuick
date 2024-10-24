@@ -12,6 +12,8 @@ const cors = require("cors");
 // const deliveryRoutes = require('./routes/deliveryRoutes');
 const managerRoutes = require("./routes/managerRoutes");
 
+
+
 const app = express();
 const PORT = process.env.PORT;
 
@@ -31,7 +33,6 @@ app.use(
   })
 );
 
-// Routes:
 
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
