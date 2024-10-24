@@ -59,7 +59,6 @@ const getRestaurantById = async (req, res) => {
     res.status(500).json({ message: 'Erreur interne du serveur.' });
   }
 };
-
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {
@@ -248,4 +247,3 @@ module.exports = {
     { name: 'profileImage', maxCount: 1 },
     { name: 'slides', maxCount: 10 },
   ]), editRestaurant, searchRestaurants, deleteRestaurant, getRestaurantById };
-
