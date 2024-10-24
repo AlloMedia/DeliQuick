@@ -23,9 +23,9 @@ const rejectOrAcceptRestaurant = async (req, res) => {
 
     const isAproved = req.body.isAproved;
 
-    console.log(
-      `Updating restaurant ${restaurantId} to isAproved: ${isAproved}`
-    );
+    // console.log(
+    //   `Updating restaurant ${restaurantId} to isAproved: ${isAproved}`
+    // );
 
     const restaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
@@ -46,7 +46,6 @@ const rejectOrAcceptRestaurant = async (req, res) => {
     res.status(500).json({ message: "Error updating restaurant", error });
   }
 };
-
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {

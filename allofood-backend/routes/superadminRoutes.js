@@ -1,5 +1,5 @@
-const superAdminController = require("../controllers/superAdmin/SuperAdminController");
 const RestaurantController = require("../controllers/superAdmin/RestaurantController");
+const superAdminController = require("../controllers/superAdmin/SuperAdminController");
 const express = require("express");
 const router = express.Router();
 const { addRestaurant, upload } = require('../controllers/superAdmin/SuperAdminController');
@@ -14,6 +14,7 @@ router.put(
   "/restaurants/reject-or-accept/:restaurantId",
   superAdminController.rejectOrAcceptRestaurant
 );
+
 router.get(
   "/Restaurant/unapproved",
   RestaurantController.getUnapprovedRestaurants
