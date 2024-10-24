@@ -5,6 +5,8 @@ import { filterRoutesByRole } from "../utils/routeUtils";
 import { useAuth } from "../context/auth/AuthContext";
 import allRoutes from "../constants/sidebarNavigation";
 import ProtectedRoute from "../components/ProtectedRoute";
+import AddRestaurant from "../views/superadmin/Restaurants/AddRestaurant";
+import EditRestaurant from "views/superadmin/Restaurants/EditRestaurant";
 
 import Register from "../views/auth/register";
 import Login from "../views/auth/login";
@@ -102,8 +104,13 @@ const Router = () => {
         />
       )}
 
-      {/* 404 Route */}
-      <Route path="*" element={<NotFound />} />
+      <Route path="/add-restaurant" element={<AddRestaurant />} />
+      <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
+
+
+      {/* Catch all route for 404 */}
+      <Route path="*" element={<p>Not found</p>} />
+
     </Routes>
   );
 };

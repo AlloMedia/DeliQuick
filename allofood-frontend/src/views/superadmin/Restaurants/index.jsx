@@ -106,6 +106,12 @@ const Restaurants = () => {
                     >
                       Delete
                     </button>
+                    <button
+                      onClick={() => navigate(`/edit-restaurant/${restaurant._id}`)}
+                      className="text-white bg-green-600 hover:bg-green-700 p-2 rounded"
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))
