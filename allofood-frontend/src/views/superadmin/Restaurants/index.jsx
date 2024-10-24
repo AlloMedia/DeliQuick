@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const Restaurants = () => {
   const [restaurants, setRestaurants] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+  const [searchTerm, setSearchTerm] = React.useState('');
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -16,7 +17,7 @@ const Restaurants = () => {
   const fetchAllRestaurants = async () => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/superadmin/restaurants'); // Fetch all restaurants
+      const response = await axiosInstance.get('/superadmin/restaurants');
       setRestaurants(response.data);
       setLoading(false);
     } catch (error) {
@@ -25,20 +26,58 @@ const Restaurants = () => {
     }
   };
 
+  const searchRestaurants = async (query) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get('http://localhost:3001/superadmin/search', {
+        params: { query },
+      });
+      setRestaurants(response.data.restaurants); 
+      setLoading(false);
+    } catch (error) {
+      console.error("Error searching restaurants:", error);
+      setLoading(false);
+      setRestaurants([]);
+    }
+  };
+
+  // Debounce function to delay the search
+  const debounce = (func, delay) => {
+    let timer;
+    return (...args) => {
+      clearTimeout(timer);
+      timer = setTimeout(() => func(...args), delay);
+    };
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (value.trim() === '') {
+      fetchAllRestaurants();
+    } else {
+      debounceSearch(value);
+    }
+  };
+
+  const debounceSearch = debounce((query) => {
+    searchRestaurants(query);
+  }, 300); 
+
   const deleteRestaurant = async (restaurantId) => {
     try {
       const response = await axiosInstance.delete(`/superadmin/restaurants/${restaurantId}`);
-      toast.success(response.data.message); // Notify success
-      fetchAllRestaurants(); // Refresh list after deletion
+      toast.success(response.data.message);
+      fetchAllRestaurants(); // Refresh the list after deletion
     } catch (error) {
-      console.error("Error deleting restaurant:", error.response); // Log the full error response
-      toast.error("Failed to delete restaurant: " + (error.response?.data?.message || error.message)); // Notify error
+      console.error("Error deleting restaurant:", error.response);
+      toast.error("Failed to delete restaurant: " + (error.response?.data?.message || error.message));
     }
   };
 
   return (
     <div className="mt-5">
-      <ToastContainer /> {/* Toast container to render the toast messages */}
+      <ToastContainer />
       <div className="mb-4">
         <button
           onClick={() => navigate('/add-restaurant')}
@@ -46,6 +85,18 @@ const Restaurants = () => {
         >
           Go to Add Restaurant
         </button>
+      </div>
+      {/* Search Bar */}
+      <div className="relative mb-4">
+        <label htmlFor="SearchTerm" className="sr-only">Search</label>
+        <input
+          type="text"
+          id="SearchTerm"
+          placeholder="Search by name or address..."
+          className="w-full rounded-md border-gray-200 py-2.5 pe-10 shadow-sm sm:text-sm"
+          value={searchTerm}
+          onChange={handleSearchChange}
+        />
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
