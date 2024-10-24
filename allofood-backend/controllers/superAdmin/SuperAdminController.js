@@ -200,12 +200,15 @@ const editRestaurant = async (req, res) => {
   }
 };
 
-
 // Search for restaurants by name
 const searchRestaurants = async (req, res) => {
   try {
-    const { name, address } = req.query;
+    const { query } = req.query;
 
+    if (!query) {
+      return res.status(400).json({ message: "Veuillez fournir un terme de recherche." });
+    }
+    const { name, address } = req.query;
     if (!name && !address) {
       return res.status(400).json({
         message:
@@ -218,11 +221,13 @@ const searchRestaurants = async (req, res) => {
       searchRestaurant.name = { $regex: new RegExp(name, "i") };
     }
 
-    if (address) {
-      searchRestaurant.address = { $regex: new RegExp(address, "i") };
-    }
-
-    const restaurants = await Restaurant.find(searchRestaurant);
+    const searchRegex = new RegExp(query, "i");
+    const restaurants = await Restaurant.find({
+      $or: [
+        { name: searchRegex },
+        { address: searchRegex }
+      ]
+    });
 
     if (restaurants.length === 0) {
       return res.status(404).json({
