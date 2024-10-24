@@ -5,9 +5,9 @@ const router = express.Router();
 const { addRestaurant, upload } = require('../controllers/superAdmin/SuperAdminController');
 
 router.post('/add', upload, addRestaurant);
-router.put("/edit/:restaurantId", superAdminController.editRestaurant);
+router.put("/edit/:restaurantId", upload, superAdminController.editRestaurant);
 router.get("/search", superAdminController.searchRestaurants);
-
+router.get('/restaurant/:restaurantId', superAdminController.getRestaurantById);
 
 // Route for rejecting or accepting a restaurant
 router.put(

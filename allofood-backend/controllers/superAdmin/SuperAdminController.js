@@ -11,8 +11,8 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
 const upload = multer({ storage });
+
 const rejectOrAcceptRestaurant = async (req, res) => {
   try {
     const restaurantId = req.params.restaurantId;
@@ -47,10 +47,23 @@ const rejectOrAcceptRestaurant = async (req, res) => {
   }
 };
 
+const getRestaurantById = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant introuvable.' });
+    }
+    res.status(200).json({ restaurant });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur interne du serveur.' });
+  }
+};
+
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671789397a9fea151bdbe408";
+    const superAdminId = "671a22395f62ac2f31ccecd2";
 
     const {
       user,
@@ -136,22 +149,18 @@ const deleteRestaurant = async (req, res) => {
 
 const editRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671630836d5a9e540f577459"; 
-
-    // Destructure the restaurant ID from the URL parameters and the fields from the request body
+    const superAdminId = "671a22395f62ac2f31ccecd2"; 
     const { restaurantId } = req.params;
     const { user, name, description, images, address, phone, status, isApproved } = req.body;
 
-    // Check if the user making the request is the SuperAdmin
     if (user !== superAdminId) {
       return res.status(403).json({ message: "Accès interdit. Vous n'êtes pas autorisé à modifier ce restaurant." });
     }
 
-    // Find the restaurant by ID and update its fields
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
       { name, description, images, address, phone, status, isApproved },
-      { new: true, runValidators: true } // Return the updated document and validate the updates
+      { new: true, runValidators: true } 
     );
 
     // If the restaurant does not exist, return a 404 error
@@ -159,10 +168,8 @@ const editRestaurant = async (req, res) => {
       return res.status(404).json({ message: "Restaurant introuvable." });
     }
 
-    // Respond with the updated restaurant information
     res.status(200).json({ message: "Restaurant mis à jour avec succès.", restaurant: updatedRestaurant });
   } catch (error) {
-    // Handle validation errors or other errors
     if (error instanceof mongoose.Error.ValidationError) {
       return res.status(400).json({ message: "Données invalides.", errors: error.errors });
     }
@@ -170,6 +177,7 @@ const editRestaurant = async (req, res) => {
     res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
+
 
 // Search for restaurants by name
 const searchRestaurants = async (req, res) => {
@@ -206,4 +214,4 @@ module.exports = { rejectOrAcceptRestaurant, addRestaurant,
     { name: 'banner', maxCount: 1 },
     { name: 'profileImage', maxCount: 1 },
     { name: 'slides', maxCount: 10 },
-  ]), editRestaurant, searchRestaurants, deleteRestaurant };
+  ]), editRestaurant, searchRestaurants, deleteRestaurant, getRestaurantById };
