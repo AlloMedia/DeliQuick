@@ -27,3 +27,12 @@ input.defaultCheckbox::before {
 input:checked.defaultCheckbox::before { 
 	opacity: 1;
 }
+
+input::placeholder {
+	color: transparent;
+}
+
+.btn-auth {
+	background-color: #0e0e0e;
+	color: white;
+}

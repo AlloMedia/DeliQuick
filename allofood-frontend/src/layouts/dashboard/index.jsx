@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "components/navbar";
 import Sidebar from "components/sidebar";
 import Footer from "components/footer/Footer";
-import { useUser } from "../../context/UserContext";
+import { useAuth } from "../../context/auth/AuthContext";
 import { filterRoutesByRole } from "../../utils/routeUtils";
 import allRoutes from "../../constants/sidebarNavigation";
 
@@ -12,7 +12,7 @@ const Layout = (props) => {
   const location = useLocation();
   const [open, setOpen] = React.useState(true);
   const [currentRoute, setCurrentRoute] = React.useState("Main Dashboard");
-  const userRole = useUser(); // Get the user role from the context
+  const userRole = useAuth(); // Get the user role from the context
   const routes = filterRoutesByRole(allRoutes, userRole); // Filter routes based on the user role
 
   React.useEffect(() => {

@@ -2,8 +2,6 @@ const Order = require("../../models/orderModel");
 const User = require("../../models/userModel");
 const Role = require("../../models/roleModel");
 const { mailDelivery } = require("../../helpers/mailDelivery");
-const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 
 const notifyDelivery = async (orderId) => {
   try {
@@ -28,14 +26,9 @@ const notifyDelivery = async (orderId) => {
     order.notifiedDeliveryPeople = availableDeliveryPeople.map((dp) => dp._id);
     await order.save();
 
-    // Send email notifications with token
+    // Send email notifications to delivery people
     const emailPromises = availableDeliveryPeople.map((deliveryPerson) =>
-      mailDelivery(
-        deliveryPerson.email,
-        "New Order Available",
-        order._id,
-        deliveryPerson._id
-      )
+      mailDelivery(deliveryPerson.email, "New Order Available")
     );
 
     await Promise.all(emailPromises);
@@ -55,59 +48,32 @@ const notifyDelivery = async (orderId) => {
 };
 
 const acceptDelivery = async (req, res) => {
-  const token = req.query.token;
-  if (!token) return res.status(401).json({ error: "Access denied" });
-
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
   try {
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
-    const { orderId, deliveryPersonId } = decoded;
+    const { orderId, deliveryId } = req.body; 
 
-    const order = await Order.findById(orderId).session(session);
+    const order = await Order.findById(orderId);
     if (!order || order.status !== "Ready") {
-      await session.abortTransaction();
-      return res
-        .status(400)
-        .json({ error: "Order not available for acceptance" });
+      return res.status(400).json({ error: "Order not available for acceptance" });
     }
 
-    if (!order.notifiedDeliveryPeople.includes(deliveryPersonId)) {
-      await session.abortTransaction();
-      return res
-        .status(403)
-        .json({ error: "You were not notified about this order" });
+    if (!order.notifiedDeliveryPeople.includes(deliveryId)) {
+      return res.status(403).json({ error: "You were not notified about this order" });
     }
 
-    order.deliveryPerson = deliveryPersonId;
+    order.deliveryPerson = deliveryId;
     order.status = "Assigned";
     order.deliveryAssignedAt = new Date();
     order.notifiedDeliveryPeople = [];
-    await order.save({ session });
+    await order.save();
 
-    await User.findByIdAndUpdate(deliveryPersonId, {
+    await User.findByIdAndUpdate(deliveryId, {
       isAvailable: false,
-    }).session(session);
-
-    await session.commitTransaction();
-
-    // Send confirmation email to the delivery person
-    const deliveryPerson = await User.findById(deliveryPersonId);
-    await mailDelivery(
-      deliveryPerson.email,
-      "Order Assigned",
-      orderId,
-      deliveryPersonId
-    );
+    });
 
     res.status(200).json({ message: "Delivery accepted successfully", order });
   } catch (error) {
-    await session.abortTransaction();
     console.error(error);
     res.status(500).json({ error: "Something went wrong" });
-  } finally {
-    session.endSession();
   }
 };
 

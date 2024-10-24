@@ -1,13 +1,8 @@
-const jwt = require("jsonwebtoken");
 const { sendEmail } = require("./sendEmailHelper");
 
-const mailDelivery = async (to, subject, orderId, deliveryPersonId) => {
-  const token = jwt.sign({ orderId, deliveryPersonId }, process.env.TOKEN_SECRET, {
-    expiresIn: '1h'
-  });
+const mailDelivery = async (to, subject) => {
 
-  const queryParam = encodeURIComponent(token);
-  const acceptUrl = `${process.env.BACKEND_URL}/delivery/accept?token=${queryParam}`;
+  const acceptUrl = `${process.env.FRONTEND_URL}/delivery/requests`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,

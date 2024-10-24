@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { useAuth } from 'context/auth/AuthContext';
 import './styles.css';
 
 Modal.setAppElement('#root');
 
 const EditOrder = ({ isOpen, onRequestClose, order, onUpdateStatus }) => {
-  const [status, setStatus] = useState(order ? order.status : '');
+  const { user } = useAuth();
+  const [status, setStatus] = useState(user.role === 'manager' ? 'Pending' : 'On the Way');
 
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
@@ -46,12 +48,21 @@ const EditOrder = ({ isOpen, onRequestClose, order, onUpdateStatus }) => {
               onChange={handleStatusChange}
               className="mt-1 block w-full border pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
-              <option value="Pending">Pending</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Ready">Ready</option>
-              <option value="Delivered">Delivered</option>
-              <option value="Cancelled">Cancelled</option>
-              <option value="Rejected">Rejected</option>
+              {user.role === 'manager'
+                  ?
+                    <>
+                      <option value="Pending">Pending</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Ready">Ready</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </>
+                  :
+                    <>
+                      <option value="On the Way">On the Way</option>
+                    </>
+              }
+                    <option value="Delivered">Delivered</option>
+                    <option value="Rejected">Rejected</option>
             </select>
           </div>
           <div className="flex justify-end">

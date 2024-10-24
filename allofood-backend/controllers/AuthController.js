@@ -34,6 +34,7 @@ async function register(req, res) {
     email: req.body.email,
     password: hashedPassword,
     role: role._id,
+    address: req.body.address,
     phone: req.body.phone,
   });
 
@@ -97,7 +98,7 @@ async function login(req, res) {
     if (!validPass)
       return res.status(400).json({ error: "Invalid email or password" });
 
-    if (!user.is_verified) {
+    if (!user.isVerified) {
       const emailSent = await sendVerificationEmail(
         user,
         req.body.email,
@@ -124,6 +125,9 @@ async function sendOtp(req, res) {
   const user = await UserModel.findOne({ email: req.body.email });
   if (!user) return res.status(404).json({ message: "User not found" });
 
+  
+  // console.log(process.env.OTP_TOKEN_SECRET);
+  
   const otp = speakeasy.totp({
     secret: process.env.OTP_SECRET,
     encoding: "base32",
@@ -138,7 +142,7 @@ async function sendOtp(req, res) {
     process.env.OTP_TOKEN_SECRET,
     { expiresIn: "5m" }
   );
-
+   
   let mailOptions = {
     from: process.env.EMAIL_USER,
     to: req.body.email,
@@ -198,7 +202,7 @@ async function generateTokenAndRespond(res, user) {
 
   const token = jwt.sign({ userId: user._id }, process.env.TOKEN_SECRET, {
     expiresIn: "1d",
-  });
+  });  
 
   const returnUser = {
     _id: user._id,
