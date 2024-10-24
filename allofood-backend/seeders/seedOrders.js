@@ -37,7 +37,7 @@ module.exports = async () => {
           },
         ],
         totalPrice: 40.0,
-        status: "Pending",
+        status: "On the Way",
       },
       {
         user: users[1]._id,

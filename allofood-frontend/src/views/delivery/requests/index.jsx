@@ -3,21 +3,23 @@ import { ToastContainer, toast } from 'react-toastify';
 import axiosInstance from '../../../api/config/axios';
 import { formatDate, formatTime } from '../../../helpers/date-format';
 import statusStyles from '../../../helpers/status-data';
+import { useAuth } from '../../../context/auth/AuthContext';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Requests = () => {
+  const { user } = useAuth();
   const [requests, setRequests] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    fetchRequests();
-  }, []);
+    if (user) fetchRequests(user._id);
+  }, [user]);
 
-  const fetchRequests = async () => {
-    // Fetch orders from the server
+  const fetchRequests = async (userId) => {
     try {
       setLoading(true);
-      const response = await axiosInstance.get('/delivery/requests');
+
+      const response = await axiosInstance.get(`/delivery/requests?deliveryId=${userId}`);
       console.log(response);
       setRequests(response.data);
       setLoading(false);
@@ -29,8 +31,27 @@ const Requests = () => {
     }
   };
 
+  const handleAcceptRequest = async (orderId) => {
+    try {
+      setLoading(true);
+
+      const response = await axiosInstance.put(
+        `/delivery/accept-request`, {orderId: orderId, deliveryId: user._id}
+      );
+
+      console.log(response);
+      fetchRequests(user._id);
+      setLoading(false);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      toast.error(error.message);
+    }
+  };
+
   return (
-    <div className="mt-5">
+    <div className="mt-7">
       <ToastContainer />
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right dark:text-gray-400">
@@ -75,6 +96,12 @@ const Requests = () => {
                   Loading...
                 </td>
               </tr>
+            ) : requests.length === 0 ? (
+              <tr>
+                <td colSpan="7" className="text-center py-4">
+                  No requests available
+                </td>
+              </tr>
             ) : (
               requests.map((request) => {
                 const { bgColor, icon } = statusStyles[request.status] || {};
@@ -117,18 +144,13 @@ const Requests = () => {
                     <td className="px-6 py-4">{request.user.address}</td>
                     <td className="px-6 py-4">${request.totalPrice}</td>
                     <td className="flex items-center px-6 py-4">
-                      <a
-                        href="/#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                        onClick={() => handleAcceptRequest(request._id)}
+                        disabled={loading || request.status !== 'Ready'}
                       >
-                        Edit
-                      </a>
-                      <a
-                        href="/#"
-                        className="font-medium text-red-600 dark:text-red-500 hover:underline ms-3"
-                      >
-                        Remove
-                      </a>
+                        {loading ? 'Processing...' : 'Accept'}
+                      </button>
                     </td>
                   </tr>
                 );

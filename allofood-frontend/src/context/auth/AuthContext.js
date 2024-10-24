@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
       console.log('response', response);
       const data = await response.data;
 
-      localStorage.setItem('tempUserEmail', email);
+      // localStorage.setItem('tempUserEmail', email);
       localStorage.setItem('otpToken', data.otpToken);
 
       setIsLoading(false);
@@ -103,7 +103,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axiosInstance.post('auth/verify-otp', { otp, otpToken });
 
       localStorage.removeItem('otpToken');
-      localStorage.removeItem('tempUserEmail');
+      // localStorage.removeItem('tempUserEmail');
 
       setIsLoading(false);
       setUser(response.data.user);
