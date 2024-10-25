@@ -10,6 +10,7 @@ import EditRestaurant from "views/superadmin/Restaurants/EditRestaurant";
 
 import Register from "../views/auth/register";
 import Login from "../views/auth/login";
+import Logout from "../views/auth/logout";
 import OtpVerification from "../views/auth/otp-verification";
 import ForgotPassword from "../views/auth/forgot-password";
 import ResetPassword from "../views/auth/reset-password";
@@ -48,10 +49,7 @@ const Router = () => {
               key={index}
               path={route.path}
               element={
-                <ProtectedRoute
-                  Component={route.component}
-                  roles={route.roles}
-                />
+                <ProtectedRoute Component={route.component} roles={route.roles} />
               }
             />
           ))}
@@ -98,6 +96,7 @@ const Router = () => {
           </PublicRoute>
         }
       />
+      <Route path="/logout" element={<Logout />} />
 
       {/* Root redirect for authenticated users */}
       {user && user.role && (
@@ -110,22 +109,8 @@ const Router = () => {
       <Route path="/add-restaurant" element={<AddRestaurant />} />
       <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
 
-
       {/* Catch all route for 404 */}
       <Route path="*" element={<NotFound />} />
-
-      {/* Logout Route */}
-      <Route
-        path="/logout"
-        element={
-          <PublicRoute>
-            {() => {
-              logout();
-              return <Navigate to="/login" replace />;
-            }}
-          </PublicRoute>
-        }
-      />
     </Routes>
   );
 };
