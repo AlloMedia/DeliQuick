@@ -3,7 +3,8 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
-const orderRoutes = require('./routes/userRoutes');  // Correct route
+const orderRoutes = require('./routes/userRoutes');
+const deleveryRoutes = require('./routes/deliveryRoutes');
 
 require("dotenv").config();
 const cors = require("cors");
@@ -38,6 +39,7 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
+app.use("/delivery", deleveryRoutes);
 app.use('/api', orderRoutes);  // Using the correct route
 
 // Start the server after connecting to the database
