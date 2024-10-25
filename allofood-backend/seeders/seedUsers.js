@@ -27,7 +27,7 @@ module.exports = async () => {
         name: "Client",
         email: "client@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("123456", 10),
+        password: await bcrypt.hash("A1234a@/", 10),
         address: "123, Main Street, City",
         role: clientRole._id, // Assign role ObjectId
         isVerified: true,
@@ -48,7 +48,7 @@ module.exports = async () => {
         name: "SuperAdmin",
         email: "superadmin@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("123456", 10),
+        password: await bcrypt.hash("SuperAdmin-123456", 10),
         address: "123, Main Street, City",
         role: superAdminRole._id, // Assign role ObjectId
         isVerified: true,

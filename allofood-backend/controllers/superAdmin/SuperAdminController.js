@@ -1,18 +1,18 @@
 const mongoose = require("mongoose");
 const Restaurant = require("../../models/restaurantModel");
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); 
+    cb(null, "uploads/");
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
-
 const upload = multer({ storage });
+
 const rejectOrAcceptRestaurant = async (req, res) => {
   try {
     const restaurantId = req.params.restaurantId;
@@ -23,9 +23,9 @@ const rejectOrAcceptRestaurant = async (req, res) => {
 
     const isAproved = req.body.isAproved;
 
-    console.log(
-      `Updating restaurant ${restaurantId} to isAproved: ${isAproved}`
-    );
+    // console.log(
+    //   `Updating restaurant ${restaurantId} to isAproved: ${isAproved}`
+    // );
 
     const restaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
@@ -47,36 +47,50 @@ const rejectOrAcceptRestaurant = async (req, res) => {
   }
 };
 
+const getRestaurantById = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant introuvable.' });
+    }
+    res.status(200).json({ restaurant });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur interne du serveur.' });
+  }
+};
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671789397a9fea151bdbe408";
+    const superAdminId = "671a22395f62ac2f31ccecd2";
 
-    const {
-      user,
-      name,
-      description,
-      address,
-      phone,
-      status,
-      isApproved,
-    } = req.body;
+    const { user, name, description, address, phone, status, isApproved } =
+      req.body;
 
     if (user !== superAdminId) {
       return res.status(403).json({
-        message: "Accès interdit. Vous n'êtes pas autorisé à ajouter des restaurants.",
+        message:
+          "Accès interdit. Vous n'êtes pas autorisé à ajouter des restaurants.",
       });
     }
 
     const images = {
-      banner: req.files && req.files['banner'] ? req.files['banner'][0].path : '',
-      profileImage: req.files && req.files['profileImage'] ? req.files['profileImage'][0].path : '',
-      slides: req.files && req.files['slides'] ? req.files['slides'].map(file => file.path) : [],
+      banner:
+        req.files && req.files["banner"] ? req.files["banner"][0].path : "",
+      profileImage:
+        req.files && req.files["profileImage"]
+          ? req.files["profileImage"][0].path
+          : "",
+      slides:
+        req.files && req.files["slides"]
+          ? req.files["slides"].map((file) => file.path)
+          : [],
     };
-    
+
     if (!images.banner || !images.profileImage || images.slides.length === 0) {
       return res.status(400).json({
-        message: "Les images du restaurant sont requises (banner, profileImage, et au moins une slide).",
+        message:
+          "Les images du restaurant sont requises (banner, profileImage, et au moins une slide).",
       });
     }
 
@@ -98,7 +112,6 @@ const addRestaurant = async (req, res) => {
       message: "Restaurant ajouté avec succès.",
       restaurant: newRestaurant,
     });
-
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       return res
@@ -106,11 +119,11 @@ const addRestaurant = async (req, res) => {
         .json({ message: "Données invalides.", errors: error.errors });
     }
     console.error("Erreur lors de l'ajout du restaurant:", error);
-    res.status(500).json({ message: "Erreur interne du serveur.", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Erreur interne du serveur.", error: error.message });
   }
 };
-
-
 
 const deleteRestaurant = async (req, res) => {
   try {
@@ -119,7 +132,6 @@ const deleteRestaurant = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
       return res.status(400).json({ message: "Invalid restaurant ID format" });
     }
-
 
     const restaurant = await Restaurant.findByIdAndDelete(restaurantId);
 
@@ -130,41 +142,58 @@ const deleteRestaurant = async (req, res) => {
     return res.status(200).json({ message: "Restaurant deleted successfully" });
   } catch (error) {
     console.error("Error deleting restaurant:", error);
-    return res.status(500).json({ message: "An error occurred while deleting the restaurant" });
+    return res
+      .status(500)
+      .json({ message: "An error occurred while deleting the restaurant" });
   }
 };
 
 const editRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671630836d5a9e540f577459"; 
+    
+    const superAdminId = "671630836d5a9e540f577459";
 
-    // Destructure the restaurant ID from the URL parameters and the fields from the request body
     const { restaurantId } = req.params;
-    const { user, name, description, images, address, phone, status, isApproved } = req.body;
+    const {
+      user,
+      name,
+      description,
+      images,
+      address,
+      phone,
+      status,
+      isApproved,
+    } = req.body;
 
-    // Check if the user making the request is the SuperAdmin
     if (user !== superAdminId) {
-      return res.status(403).json({ message: "Accès interdit. Vous n'êtes pas autorisé à modifier ce restaurant." });
+      return res.status(403).json({
+        message:
+          "Accès interdit. Vous n'êtes pas autorisé à modifier ce restaurant.",
+      });
     }
 
-    // Find the restaurant by ID and update its fields
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
       { name, description, images, address, phone, status, isApproved },
-      { new: true, runValidators: true } // Return the updated document and validate the updates
+      { new: true, runValidators: true } 
     );
 
     // If the restaurant does not exist, return a 404 error
     if (!updatedRestaurant) {
       return res.status(404).json({ message: "Restaurant introuvable." });
     }
-
+    
     // Respond with the updated restaurant information
-    res.status(200).json({ message: "Restaurant mis à jour avec succès.", restaurant: updatedRestaurant });
+    res.status(200).json({
+      message: "Restaurant mis à jour avec succès.",
+      restaurant: updatedRestaurant,
+    });
+    
   } catch (error) {
-    // Handle validation errors or other errors
     if (error instanceof mongoose.Error.ValidationError) {
-      return res.status(400).json({ message: "Données invalides.", errors: error.errors });
+      return res
+        .status(400)
+        .json({ message: "Données invalides.", errors: error.errors });
     }
     console.error("Erreur lors de la modification du restaurant:", error);
     res.status(500).json({ message: "Erreur interne du serveur." });
@@ -174,22 +203,20 @@ const editRestaurant = async (req, res) => {
 // Search for restaurants by name
 const searchRestaurants = async (req, res) => {
   try {
-    const { name, address } = req.query;
+    const { query } = req.query;
 
-    if (!name && !address) {
-      return res.status(400).json({ message: "Veuillez fournir un nom ou une adresse de restaurant à rechercher." });
-    }
-    const searchRestaurant = {};
-
-    if (name) {
-      searchRestaurant.name = { $regex: new RegExp(name, "i") };
+    if (!query) {
+      return res.status(400).json({ message: "Veuillez fournir un terme de recherche." });
     }
 
-    if (address) {
-      searchRestaurant.address = { $regex: new RegExp(address, "i") };
-    }
-
-    const restaurants = await Restaurant.find(searchRestaurant);
+    // Search for restaurants by name or address matching the query
+    const searchRegex = new RegExp(query, "i");
+    const restaurants = await Restaurant.find({
+      $or: [
+        { name: searchRegex },
+        { address: searchRegex }
+      ]
+    });
 
     if (restaurants.length === 0) {
       return res.status(404).json({ message: "Aucun restaurant trouvé correspondant aux critères de recherche." });
@@ -201,9 +228,12 @@ const searchRestaurants = async (req, res) => {
   }
 };
 
-module.exports = { rejectOrAcceptRestaurant, addRestaurant,
+
+module.exports = {
+  rejectOrAcceptRestaurant,
+  addRestaurant,
   upload: upload.fields([
     { name: 'banner', maxCount: 1 },
     { name: 'profileImage', maxCount: 1 },
     { name: 'slides', maxCount: 10 },
-  ]), editRestaurant, searchRestaurants, deleteRestaurant };
+  ]), editRestaurant, searchRestaurants, deleteRestaurant, getRestaurantById };

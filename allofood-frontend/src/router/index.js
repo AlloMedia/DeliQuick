@@ -111,6 +111,7 @@ const Router = () => {
       {/* Catch all route for 404 */}
       <Route path="*" element={<NotFound />} />
 
+
     </Routes>
   );
 };
