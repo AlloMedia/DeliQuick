@@ -234,5 +234,4 @@ const EditRestaurant = () => {
     </div>
   );
 };
-
 export default EditRestaurant;
