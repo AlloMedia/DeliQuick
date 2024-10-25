@@ -101,8 +101,6 @@ export const useLoginForm = () => {
         // Redirect based on user role
         let redirectPath = "/";
         if (userRole === "manager") {
-          redirectPath = "/admin/dashboard";
-        } else if (userRole === "manager") {
           redirectPath = "/manager/dashboard";
         } else if (userRole === "superAdmin") {
           redirectPath = "/superAdmin/dashboard";

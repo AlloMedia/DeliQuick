@@ -18,7 +18,7 @@ import Index from "../views";
 import HomeLayout from "../layouts/home";
 
 const Router = () => {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout } = useAuth();
   const [routes, setRoutes] = useState([]);
 
   useEffect(() => {
@@ -37,20 +37,23 @@ const Router = () => {
       {/* Protected Dashboard Routes */}
       {user && user.role && (
         <Route path={`/${user.role.toLowerCase()}`} element={<Layout />}>
-        {/* Default redirect */}
-        <Route index element={<Navigate to="dashboard" replace />} />
+          {/* Default redirect */}
+          <Route index element={<Navigate to="dashboard" replace />} />
 
-        {/* Dynamic routes based on user role */}
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            element={
-              <ProtectedRoute Component={route.component} roles={route.roles} />
-            }
-          />
-        ))}
-      </Route>
+          {/* Dynamic routes based on user role */}
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <ProtectedRoute
+                  Component={route.component}
+                  roles={route.roles}
+                />
+              }
+            />
+          ))}
+        </Route>
       )}
 
       {/* Public Routes */}
@@ -104,6 +107,19 @@ const Router = () => {
 
       {/* 404 Route */}
       <Route path="*" element={<NotFound />} />
+
+      {/* Logout Route */}
+      <Route
+        path="/logout"
+        element={
+          <PublicRoute>
+            {() => {
+              logout();
+              return <Navigate to="/login" replace />;
+            }}
+          </PublicRoute>
+        }
+      />
     </Routes>
   );
 };
