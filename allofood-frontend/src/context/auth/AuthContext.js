@@ -26,6 +26,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // setIsLoading(true);
       const response = await axiosInstance.post("auth/register", credentials);
+
       const data = await response.data;
       // setIsLoading(false);
       return { success: data.success };
@@ -56,10 +57,12 @@ export const AuthProvider = ({ children }) => {
 
       return { data, success: data.success };
     } catch (error) {
+
       console.log("error", error);
       // setIsLoading(false);
       const errorMessage =
         error.response?.data?.error || error.message || "An error occurred";
+
       return { error: errorMessage };
     }
   };
@@ -86,8 +89,8 @@ export const AuthProvider = ({ children }) => {
       console.log("response", response);
       const data = await response.data;
 
-      localStorage.setItem("tempUserEmail", email);
-      localStorage.setItem("otpToken", data.otpToken);
+      // localStorage.setItem('tempUserEmail', email);
+      localStorage.setItem('otpToken', data.otpToken);
 
       // setIsLoading(false);
       return { data, success: data.success };
@@ -108,8 +111,8 @@ export const AuthProvider = ({ children }) => {
         otpToken,
       });
 
-      localStorage.removeItem("otpToken");
-      localStorage.removeItem("tempUserEmail");
+      localStorage.removeItem('otpToken');
+      // localStorage.removeItem('tempUserEmail');
 
       // setIsLoading(false);
       setUser(response.data.user);

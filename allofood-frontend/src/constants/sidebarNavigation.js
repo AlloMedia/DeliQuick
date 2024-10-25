@@ -3,7 +3,7 @@ import { MdHome, MdPerson } from "react-icons/md";
 import MainDashboard from "views/admin/default";
 import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
-import Orders from "views/admin/orders";
+import Orders from "components/order";
 import Restaurant from "views/superadmin/Restaurants";
 import RTLDefault from "views/rtl/default";
 import Requests from "views/superadmin/Requests";

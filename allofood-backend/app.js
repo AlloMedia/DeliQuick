@@ -8,7 +8,12 @@ const orderRoutes = require('./routes/userRoutes');  // Correct route
 require("dotenv").config();
 const cors = require("cors");
 
+// const userRoutes = require('./routes/userRoutes');
+// const deliveryRoutes = require('./routes/deliveryRoutes');
+
 const managerRoutes = require("./routes/managerRoutes");
+
+
 
 const app = express();
 const PORT = process.env.PORT;
@@ -29,12 +34,11 @@ app.use(
   })
 );
 
-// Routes:
+
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
 app.use('/api', orderRoutes);  // Using the correct route
-
 
 // Start the server after connecting to the database
 if (process.env.NODE_ENV !== "test") {

@@ -17,7 +17,7 @@ module.exports = async () => {
         name: "Manager",
         email: "manager@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("Myva3783.+", 10),
+        password: await bcrypt.hash("Manager-123456", 10),
         address: "123, Main Street, City",
         role: managerRole._id, // Assign role ObjectId
         isVerified: true,
@@ -27,7 +27,7 @@ module.exports = async () => {
         name: "Client",
         email: "client@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("Myva3783.+", 10),
+        password: await bcrypt.hash("User-123456", 10),
         address: "123, Main Street, City",
         role: clientRole._id, // Assign role ObjectId
         isVerified: true,
@@ -37,7 +37,7 @@ module.exports = async () => {
         name: "Delivery",
         email: "delivery@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("Myva3783.+", 10),
+        password: await bcrypt.hash("Delivery-123456", 10),
         address: "123, Main Street, City",
         role: deliveryRole._id, // Assign role ObjectId
         isVerified: true,
@@ -48,7 +48,7 @@ module.exports = async () => {
         name: "SuperAdmin",
         email: "superadmin@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("Myva3783.+", 10),
+        password: await bcrypt.hash("SuperAdmin-123456", 10),
         address: "123, Main Street, City",
         role: superAdminRole._id, // Assign role ObjectId
         isVerified: true,
