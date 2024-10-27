@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
 const orderRoutes = require('./routes/userRoutes');
 const deleveryRoutes = require('./routes/deliveryRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 require("dotenv").config();
 const cors = require("cors");
@@ -41,6 +42,7 @@ app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
 app.use("/delivery", deleveryRoutes);
 app.use('/api', orderRoutes);  // Using the correct route
+app.use('/user', userRoutes);
 
 // Start the server after connecting to the database
 if (process.env.NODE_ENV !== "test") {
