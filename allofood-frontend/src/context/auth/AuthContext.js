@@ -26,10 +26,8 @@ export const AuthProvider = ({ children }) => {
   const register = async (credentials) => {
     try {
       // setIsLoading(true);
-      const response = await axiosInstance.post("auth/register", credentials);
-
+      const response = await axiosInstance.post('auth/register', credentials);
       const data = await response.data;
-      // setIsLoading(false);
       return { success: data.success };
     } catch (error) {
       // setIsLoading(false);
@@ -38,13 +36,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (credentials) => {
-    // setIsLoading(true);
-
     try {
       const response = await axiosInstance.post("auth/login", credentials);
       const data = await response.data;
-
-      // setIsLoading(false);
 
       if (data.require2FA) {
         return { data, success: data.success };
@@ -54,25 +48,21 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
 
-      console.log("data", data);
+      console.log('data', data);
 
       return { data, success: data.success };
     } catch (error) {
       console.log("error", error);
       // setIsLoading(false);
-      const errorMessage =
-        error.response?.data?.error || error.message || "An error occurred";
-
+      const errorMessage = error.response?.data?.error || error.message || 'An error occurred';
       return { error: errorMessage };
     }
   };
 
   const logout = async () => {
     try {
-      console.log("logging out");
-
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("user");
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
       setUser(null);
 
       await axiosInstance.get("auth/logout");
@@ -84,11 +74,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const sendOTP = async (email) => {
-    // setIsLoading(true);
-
     try {
-      const response = await axiosInstance.post("auth/send-otp", { email });
-      console.log("response", response);
+      const response = await axiosInstance.post('auth/send-otp', { email });
+      console.log('response', response);
       const data = await response.data;
 
       // localStorage.setItem('tempUserEmail', email);
@@ -97,15 +85,11 @@ export const AuthProvider = ({ children }) => {
       // setIsLoading(false);
       return { data, success: data.success };
     } catch (error) {
-      // setIsLoading(false);
-      console.log("error ouccured", error);
       return { error: error.response.data.error };
     }
   };
 
   const verifyOTP = async (otp) => {
-    // setIsLoading(true);
-
     try {
       const otpToken = localStorage.getItem("otpToken");
       const response = await axiosInstance.post("auth/verify-otp", {
@@ -124,8 +108,6 @@ export const AuthProvider = ({ children }) => {
 
       return { success: response.data.success };
     } catch (error) {
-      // setIsLoading(false);
-      console.log("error ouccured", error);
       return { error: error.response.data.error };
     }
   };
