@@ -190,7 +190,6 @@ const getAllItems = async (req, res) => {
       ...item.toObject(),
       category: item.category.name,
     }));
-    console.log("All items fetched successfully." + itemsWithCategoryName);
 
     res.status(200).json(itemsWithCategoryName);
   } catch (error) {
