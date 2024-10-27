@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "../../api/config/axios.js";
+import { redirect } from "react-router-dom";
 
 const AuthContext = createContext(null);
 
@@ -57,7 +58,6 @@ export const AuthProvider = ({ children }) => {
 
       return { data, success: data.success };
     } catch (error) {
-
       console.log("error", error);
       // setIsLoading(false);
       const errorMessage =
@@ -76,6 +76,8 @@ export const AuthProvider = ({ children }) => {
       setUser(null);
 
       await axiosInstance.get("auth/logout");
+
+      return redirect("/login");
     } catch (error) {
       console.error(error.response.data.error);
     }
@@ -90,7 +92,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.data;
 
       // localStorage.setItem('tempUserEmail', email);
-      localStorage.setItem('otpToken', data.otpToken);
+      localStorage.setItem("otpToken", data.otpToken);
 
       // setIsLoading(false);
       return { data, success: data.success };
@@ -111,7 +113,7 @@ export const AuthProvider = ({ children }) => {
         otpToken,
       });
 
-      localStorage.removeItem('otpToken');
+      localStorage.removeItem("otpToken");
       // localStorage.removeItem('tempUserEmail');
 
       // setIsLoading(false);

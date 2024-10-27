@@ -19,7 +19,7 @@ module.exports = async () => {
         phone: "0123456789",
         password: await bcrypt.hash("Manager-123456", 10),
         address: "123, Main Street, City",
-        role: managerRole._id, // Assign role ObjectId
+        role: managerRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       },
@@ -29,7 +29,7 @@ module.exports = async () => {
         phone: "0123456789",
         password: await bcrypt.hash("User-123456", 10),
         address: "123, Main Street, City",
-        role: clientRole._id, // Assign role ObjectId
+        role: clientRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       },
@@ -39,7 +39,7 @@ module.exports = async () => {
         phone: "0123456789",
         password: await bcrypt.hash("Delivery-123456", 10),
         address: "123, Main Street, City",
-        role: deliveryRole._id, // Assign role ObjectId
+        role: deliveryRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
         date: new Date(),
@@ -50,7 +50,7 @@ module.exports = async () => {
         phone: "0123456789",
         password: await bcrypt.hash("SuperAdmin-123456", 10),
         address: "123, Main Street, City",
-        role: superAdminRole._id, // Assign role ObjectId
+        role: superAdminRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       },
