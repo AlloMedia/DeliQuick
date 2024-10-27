@@ -9,7 +9,8 @@ router.put("/orders/:id", orderController.updateOrderStatus);
 
 // Routes for the Menu Items CRUD operations
 router.post("/items/create", managerController.addMenuItem);
-router.put("/items/edit/:id", managerController.editMenuItem);
-router.delete("/items/delete/:id", managerController.deleteMenuItem);
+router.put("/items/edit", managerController.editMenuItem);
+router.delete("/items/delete/:id/:token", managerController.deleteMenuItem);
+router.get("/categories", managerController.getAllCategories);
 
 module.exports = router;

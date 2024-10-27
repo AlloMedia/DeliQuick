@@ -114,7 +114,6 @@ async function login(req, res) {
 
     if (require2FA) return sendOtp(req, res, user);
     else return generateTokenAndRespond(res, user);
-    
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -125,9 +124,8 @@ async function sendOtp(req, res) {
   const user = await UserModel.findOne({ email: req.body.email });
   if (!user) return res.status(404).json({ message: "User not found" });
 
-  
   // console.log(process.env.OTP_TOKEN_SECRET);
-  
+
   const otp = speakeasy.totp({
     secret: process.env.OTP_SECRET,
     encoding: "base32",
@@ -142,7 +140,7 @@ async function sendOtp(req, res) {
     process.env.OTP_TOKEN_SECRET,
     { expiresIn: "5m" }
   );
-   
+
   let mailOptions = {
     from: process.env.EMAIL_USER,
     to: req.body.email,
@@ -202,7 +200,7 @@ async function generateTokenAndRespond(res, user) {
 
   const token = jwt.sign({ userId: user._id }, process.env.TOKEN_SECRET, {
     expiresIn: "1d",
-  });  
+  });
 
   const returnUser = {
     _id: user._id,
