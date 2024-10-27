@@ -19,6 +19,7 @@ import RoleSelection from "../components/auth/RoleSelection";
 import PublicRoute from "../components/auth/PublicRoute";
 import Index from "../views";
 import HomeLayout from "../layouts/home";
+import Cart from "../views/client/Cart";
 
 const Router = () => {
   const { user, isLoading } = useAuth();
@@ -83,6 +84,7 @@ const Router = () => {
       )}
 
       {/* Public Routes */}
+      <Route path="/cart" element={<Cart/>} />
       <Route path="/" element={<HomeLayout />}>
         <Route index element={<Index />} />
         <Route
@@ -134,6 +136,7 @@ const Router = () => {
 
       <Route path="/add-restaurant" element={<AddRestaurant />} />
       <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
+      
 
       {/* Catch all route for 404 */}
       <Route path="*" element={<NotFound />} />
