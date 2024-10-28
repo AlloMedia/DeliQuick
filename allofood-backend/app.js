@@ -3,8 +3,9 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
-const orderRoutes = require('./routes/userRoutes');
-const deleveryRoutes = require('./routes/deliveryRoutes');
+const orderRoutes = require("./routes/userRoutes");
+const deleveryRoutes = require("./routes/deliveryRoutes");
+const path = require("path");
 
 require("dotenv").config();
 const cors = require("cors");
@@ -13,8 +14,6 @@ const cors = require("cors");
 // const deliveryRoutes = require('./routes/deliveryRoutes');
 
 const managerRoutes = require("./routes/managerRoutes");
-
-
 
 const app = express();
 const PORT = process.env.PORT;
@@ -35,12 +34,13 @@ app.use(
   })
 );
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
 app.use("/delivery", deleveryRoutes);
-app.use('/api', orderRoutes);  // Using the correct route
+app.use("/api", orderRoutes); // Using the correct route
 
 // Start the server after connecting to the database
 if (process.env.NODE_ENV !== "test") {

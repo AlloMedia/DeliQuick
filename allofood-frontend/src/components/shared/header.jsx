@@ -34,9 +34,9 @@ const Header = () => {
         </ul>
       </nav>
       <div className="flex items-center space-x-4">
-      <Link to="/cart">
-        <ShoppingCart className="text-gray-700" />
-      </Link>
+        <Link to="/cart">
+          <ShoppingCart className="text-gray-700" />
+        </Link>
         <Link to="/login">
           <User className="text-gray-700" />
         </Link>
