@@ -5,7 +5,6 @@ const Restaurant = require("../../models/restaurantModel");
 const category = require("../../models/categoryModel");
 const mongoose = require("mongoose");
 
-
 const createOrder = async (req, res) => {
   try {
     const { items, deliveryPerson, address, userId } = req.body;
@@ -183,24 +182,30 @@ const searchRestaurants = async (req, res) => {
 const trackOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    
+
     // Find the order by ID
     const order = await Order.findById(orderId);
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
     // Return the status and last updated timestamp
     return res.status(200).json({
-      message: 'Order status fetched successfully',
+      message: "Order status fetched successfully",
       status: order.status,
       updatedAt: order.updatedAt,
     });
   } catch (error) {
-    console.error('Error tracking order:', error);
+    console.error("Error tracking order:", error);
     return res.status(500).json({
-      message: 'Error fetching order status',
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal Server Error',
+      message: "Error fetching order status",
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "Internal Server Error",
     });
+  }
+};
+
 const getAllItems = async (req, res) => {
   try {
     const items = await Item.find().limit(20).populate("category", "name");
@@ -222,4 +227,3 @@ module.exports = {
   trackOrder,
   getAllItems,
 };
-
