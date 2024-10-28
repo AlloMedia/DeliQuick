@@ -7,6 +7,7 @@ import allRoutes from "../constants/sidebarNavigation";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AddRestaurant from "../views/superadmin/Restaurants/AddRestaurant";
 import EditRestaurant from "views/superadmin/Restaurants/EditRestaurant";
+import DetailRestaurant from "views/superadmin/Restaurants/DetailRestaurant";
 
 import Register from "../views/auth/register";
 import Login from "../views/auth/login";
@@ -147,6 +148,7 @@ const Router = () => {
       )}
 
       <Route path="/add-restaurant" element={<AddRestaurant />} />
+      <Route path="/restaurant-details/:restaurantId" element={<DetailRestaurant />} />
       <Route
         path="/edit-restaurant/:restaurantId"
         element={<EditRestaurant />}

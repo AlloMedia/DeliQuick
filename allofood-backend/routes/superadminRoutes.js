@@ -11,6 +11,7 @@ router.post('/add', upload, addRestaurant);
 router.put("/edit/:restaurantId", upload, superAdminController.editRestaurant);
 router.get("/search", superAdminController.searchRestaurants);
 router.get('/restaurant/:restaurantId', superAdminController.getRestaurantById);
+router.get("/restaurants/:restaurantId", superAdminController.getRestaurantDetails);
 
 
 // Route for rejecting or accepting a restaurant

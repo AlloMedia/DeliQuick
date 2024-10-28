@@ -6,6 +6,7 @@ const superadminRoutes = require("./routes/superadminRoutes");
 const orderRoutes = require('./routes/userRoutes');
 const deleveryRoutes = require('./routes/deliveryRoutes');
 const userRoutes = require('./routes/userRoutes');
+const path = require('path');
 
 require("dotenv").config();
 const cors = require("cors");
@@ -35,6 +36,7 @@ app.use(
     cookie: { secure: false, maxAge: 600000 },
   })
 );
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.use("/auth", authRoutes);
