@@ -18,6 +18,8 @@ import RoleSelection from "../components/auth/RoleSelection";
 import PublicRoute from "../components/auth/PublicRoute";
 import Index from "../views";
 import HomeLayout from "../layouts/home";
+import RestaurantsSection from "../components/restaurants/RestaurantCard"; // Update this path accordingly
+import RestaurantDetails from "../components/restaurants/RestaurantDetails"; 
 
 const Router = () => {
   const { user, isLoading } = useAuth();
@@ -39,20 +41,20 @@ const Router = () => {
       {/* Protected Dashboard Routes */}
       {user && user.role && (
         <Route path={`/${user.role.toLowerCase()}`} element={<Layout />}>
-        {/* Default redirect */}
-        <Route index element={<Navigate to="dashboard" replace />} />
-
-        {/* Dynamic routes based on user role */}
-        {routes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            element={
-              <ProtectedRoute Component={route.component} roles={route.roles} />
-            }
-          />
-        ))}
-      </Route>
+          {/* Default redirect */}
+          <Route index element={<Navigate to="dashboard" replace />} />
+          
+          {/* Dynamic routes based on user role */}
+          {routes.map((route, index) => (
+            <Route
+              key={index}
+              path={route.path}
+              element={
+                <ProtectedRoute Component={route.component} roles={route.roles} />
+              }
+            />
+          ))}
+        </Route>
       )}
 
       {/* Public Routes */}
@@ -104,16 +106,18 @@ const Router = () => {
         />
       )}
 
+      {/* Restaurant Management Routes */}
       <Route path="/add-restaurant" element={<AddRestaurant />} />
       <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
-
+      <Route path="/restaurants/:id" element={<RestaurantDetails />} />
+      {/* RestaurantsSection should be inside the appropriate layout or path, e.g. */}
+      <Route path={`/${user.role.toLowerCase()}/restaurants`} element={<RestaurantsSection />} />
 
       {/* Catch all route for 404 */}
       <Route path="*" element={<NotFound />} />
-
-
     </Routes>
   );
 };
+
 
 export default Router;

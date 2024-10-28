@@ -13,6 +13,9 @@ import testimonialImg from "../assets/images/network.png";
 import { useState } from "react";
 import products from "../assets/facke-data/product";
 import TestimonialSwiper from "../components/ui/swiper/TestimonialSwiper";
+// src/views/index.jsx
+import ApprovedRestaurantsSection from '../components/restaurants/index';
+
 
 const Index = () => {
   const [category, setCategory] = useState("All");
@@ -132,6 +135,10 @@ const Index = () => {
 
         <Feature />
       </section>
+
+
+      <ApprovedRestaurantsSection />
+
 
       <section className="w-[85%] mx-auto mt-24">
         <h2 className="text-3xl text-center font-bold mb-8">Popular Foods</h2>
