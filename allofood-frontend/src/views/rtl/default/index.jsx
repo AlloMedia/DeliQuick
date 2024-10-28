@@ -15,8 +15,24 @@ import DailyTraffic from "views/rtl/default/components/DailyTraffic";
 import TaskCard from "views/rtl/default/components/TaskCard";
 import tableDataCheck from "./variables/tableDataCheck.json";
 import tableDataComplex from "./variables/tableDataComplex.json";
+import { useEffect, useState } from "react";
+import axios from "../../../api/config/axios";
+  const Dashboard = () => {
+  const [stats, setStats] = useState(null);
 
-const Dashboard = () => {
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get(`/manager/stats/${localStorage.getItem('authToken')}`);
+        setStats(response.data);
+        console.log("Stats:", response.data); 
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      }
+    };
+
+    fetchStats();
+  }, []);
   return (
     <div>
       {/* Card widget */}
@@ -25,7 +41,7 @@ const Dashboard = () => {
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
           title={"Earnings"}
-          subtitle={"$340.5"}
+          subtitle={stats.totalRevenue}
         />
         <Widget
           icon={<IoDocuments className="h-6 w-6" />}

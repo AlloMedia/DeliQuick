@@ -8,6 +8,10 @@ const deleveryRoutes = require('./routes/deliveryRoutes');
 const userRoutes = require('./routes/userRoutes');
 const path = require('path');
 
+const orderRoutes = require("./routes/userRoutes");
+const deleveryRoutes = require("./routes/deliveryRoutes");
+const path = require("path");
+
 require("dotenv").config();
 const cors = require("cors");
 
@@ -15,8 +19,6 @@ const cors = require("cors");
 // const deliveryRoutes = require('./routes/deliveryRoutes');
 
 const managerRoutes = require("./routes/managerRoutes");
-
-
 
 const app = express();
 const PORT = process.env.PORT;
@@ -38,6 +40,7 @@ app.use(
 );
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
