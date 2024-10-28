@@ -4,7 +4,7 @@
   "description": "Welcome to the AlloFood project! This README will guide you through the setup and usage of the project.",
   "main": "index.js",
   "scripts": {
-    "all": "cd allofood-frontend && npm run build && cd ../allofood-backend && npm run dev"
+    "all": "cd allofood-frontend && npm start && cd ../allofood-backend && npm run dev"
   },
   "keywords": [],
   "author": "",

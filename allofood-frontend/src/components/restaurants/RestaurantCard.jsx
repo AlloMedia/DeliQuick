@@ -6,7 +6,7 @@ const RestaurantCard = ({ name, description, imageUrl, address, id }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/restaurants/${id}`); 
+    navigate(`/restaurants/${id}`); // Navigate to the restaurant details page
   };
 
   return (

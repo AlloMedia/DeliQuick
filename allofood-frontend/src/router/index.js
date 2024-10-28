@@ -21,6 +21,7 @@ import HomeLayout from "../layouts/home";
 import RestaurantsSection from "../components/restaurants/RestaurantCard"; // Update this path accordingly
 import RestaurantDetails from "../components/restaurants/RestaurantDetails"; 
 
+
 const Router = () => {
   const { user, isLoading } = useAuth();
   const [routes, setRoutes] = useState([]);
@@ -109,6 +110,11 @@ const Router = () => {
       {/* Restaurant Management Routes */}
       <Route path="/add-restaurant" element={<AddRestaurant />} />
       <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
+      <Route path="/restaurants/:id" element={<RestaurantDetails />} />
+      {/* RestaurantsSection should be inside the appropriate layout or path, e.g. */}
+      <Route path={`/${user.role.toLowerCase()}/restaurants`} element={<RestaurantsSection />} />
+      <Route path="/" element={<RestaurantsSection />} />
+      <Route path="/restaurants/:id" element={<RestaurantDetails />} />
       <Route path="/restaurants/:id" element={<RestaurantDetails />} />
       {/* RestaurantsSection should be inside the appropriate layout or path, e.g. */}
       <Route path={`/${user.role.toLowerCase()}/restaurants`} element={<RestaurantsSection />} />

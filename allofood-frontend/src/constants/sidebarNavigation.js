@@ -8,6 +8,7 @@ import Restaurant from "views/superadmin/Restaurants";
 import RTLDefault from "views/rtl/default";
 import Requests from "views/superadmin/Requests";
 import DeliveryRequests from "views/delivery/requests";
+import Items from "components/items/itemsComponent";
 
 const allRoutes = [
   {
@@ -30,14 +31,14 @@ const allRoutes = [
     path: "requests",
     icon: <i class="bi bi-bell-fill"></i>,
     component: Requests,
-    roles:["superAdmin"]
+    roles: ["superAdmin"],
   },
   {
     name: "Requests",
     path: "requests",
     icon: <i class="bi bi-bell-fill"></i>,
     component: DeliveryRequests,
-    roles:["delivery"]
+    roles: ["delivery"],
   },
   {
     name: "Orders",
@@ -45,6 +46,13 @@ const allRoutes = [
     path: "orders",
     component: Orders,
     roles: ["manager", "delivery"],
+  },
+  {
+    name: "Menu Items",
+    icon: <i class="bi bi-ui-radios-grid"></i>,
+    path: "items",
+    component: Items,
+    roles: ["manager"],
   },
   {
     name: "Restaurants",
@@ -71,7 +79,7 @@ const allRoutes = [
 
 // Export the function along with routes
 export const getRoutesByRole = (role) => {
-  return allRoutes.filter(route => route.roles.includes(role));
+  return allRoutes.filter((route) => route.roles.includes(role));
 };
 
 export default allRoutes;

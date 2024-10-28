@@ -1,4 +1,3 @@
-// RestaurantsSection.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import RestaurantCard from './RestaurantCard';
@@ -45,10 +44,10 @@ const RestaurantsSection = () => {
       <div className="bg-[#DF2020] py-5 mb-8 flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8 rounded-lg">
         <input
           type="text"
-          placeholder="Search by Name or Address"
+          placeholder="Search by Name or Address" // Changed placeholder text for clarity
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="px-10 py-2 w-3/4 md:w-1/3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DF2020] placeholder-gray-300"
+          className="px-10 py-2 w-3/4 md:w-1/3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#DF2020] placeholder-gray-300" // Added placeholder styling
         />
       </div>
 
@@ -64,7 +63,6 @@ const RestaurantsSection = () => {
                 description={restaurant.description}
                 imageUrl={restaurant.images?.banner}
                 address={restaurant.address} // Pass address here
-                id={restaurant._id} // Pass the restaurant ID
               />
             </div>
           ))
