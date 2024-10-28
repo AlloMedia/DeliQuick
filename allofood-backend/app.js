@@ -12,7 +12,6 @@ const orderRoutes = require("./routes/userRoutes");
 const deleveryRoutes = require("./routes/deliveryRoutes");
 const path = require("path");
 
-
 require("dotenv").config();
 const cors = require("cors");
 
