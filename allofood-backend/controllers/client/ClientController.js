@@ -1,18 +1,19 @@
 const Order = require('../../models/orderModel');
 const Item = require('../../models/itemModel');
-const User = require('../../models/userModel'); 
+const User = require('../../models/userModel');
+const Restaurant = require("../../models/restaurantModel");
 const mongoose = require('mongoose');
 
 const createOrder = async (req, res) => {
   try {
     const { items, deliveryPerson, address, userId } = req.body;
-    
+
     // Validate user existence
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found. Please ensure you are properly authenticated.' });
     }
-    
+
     // Validate delivery person if provided
     if (deliveryPerson) {
       const deliveryPersonExists = await User.findById(deliveryPerson);
@@ -115,10 +116,6 @@ const createOrder = async (req, res) => {
     });
   }
 };
-// const Order = require("../../models/orderModel");
-
-// Import the Restaurant model (you might have a specific file for this model)
-const Restaurant = require("../../models/restaurantModel");
 
 const searchRestaurants = async (req, res) => {
   try {
@@ -127,7 +124,7 @@ const searchRestaurants = async (req, res) => {
     if (!name && !address) {
       return res.status(400).json({ message: "Veuillez fournir un nom ou une adresse de restaurant à rechercher." });
     }
-    
+
     const searchRestaurant = {};
 
     if (name) {
@@ -143,7 +140,7 @@ const searchRestaurants = async (req, res) => {
     if (restaurants.length === 0) {
       return res.status(404).json({ message: "Aucun restaurant trouvé correspondant aux critères de recherche." });
     }
-    
+
     res.status(200).json({ message: "Restaurants trouvés avec succès.", restaurants });
   } catch (error) {
     console.error("Erreur lors de la recherche des restaurants:", error);
@@ -151,7 +148,33 @@ const searchRestaurants = async (req, res) => {
   }
 };
 
-module.exports = {
-  searchRestaurants,
-  createOrder,
+const trackOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    
+    // Find the order by ID
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    // Return the status and last updated timestamp
+    return res.status(200).json({
+      message: 'Order status fetched successfully',
+      status: order.status,
+      updatedAt: order.updatedAt,
+    });
+  } catch (error) {
+    console.error('Error tracking order:', error);
+    return res.status(500).json({
+      message: 'Error fetching order status',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal Server Error',
+    });
+  }
 };
+
+module.exports = {
+  createOrder,
+  searchRestaurants,
+  trackOrder,
+};
+
