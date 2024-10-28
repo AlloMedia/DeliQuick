@@ -41,6 +41,9 @@ const Header = () => {
         <Link to="/cart">
           <ShoppingCart className="text-gray-700" />
         </Link>
+        <Link to="/login">
+          <User className="text-gray-700" />
+        </Link>
         {user ? (
           <Link to="/profile">
             <User className="text-gray-700" />
