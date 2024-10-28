@@ -1,8 +1,10 @@
 const Order = require("../../models/orderModel");
 const Item = require("../../models/itemModel");
 const User = require("../../models/userModel");
+const Restaurant = require("../../models/restaurantModel");
 const category = require("../../models/categoryModel");
 const mongoose = require("mongoose");
+
 
 const createOrder = async (req, res) => {
   try {
@@ -139,10 +141,6 @@ const createOrder = async (req, res) => {
     });
   }
 };
-// const Order = require("../../models/orderModel");
-
-// Import the Restaurant model (you might have a specific file for this model)
-const Restaurant = require("../../models/restaurantModel");
 
 const searchRestaurants = async (req, res) => {
   try {
@@ -173,7 +171,6 @@ const searchRestaurants = async (req, res) => {
           "Aucun restaurant trouvé correspondant aux critères de recherche.",
       });
     }
-
     res
       .status(200)
       .json({ message: "Restaurants trouvés avec succès.", restaurants });
@@ -183,6 +180,27 @@ const searchRestaurants = async (req, res) => {
   }
 };
 
+const trackOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    
+    // Find the order by ID
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    // Return the status and last updated timestamp
+    return res.status(200).json({
+      message: 'Order status fetched successfully',
+      status: order.status,
+      updatedAt: order.updatedAt,
+    });
+  } catch (error) {
+    console.error('Error tracking order:', error);
+    return res.status(500).json({
+      message: 'Error fetching order status',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal Server Error',
+    });
 const getAllItems = async (req, res) => {
   try {
     const items = await Item.find().limit(20).populate("category", "name");
@@ -199,7 +217,9 @@ const getAllItems = async (req, res) => {
 };
 
 module.exports = {
-  searchRestaurants,
   createOrder,
+  searchRestaurants,
+  trackOrder,
   getAllItems,
 };
+
