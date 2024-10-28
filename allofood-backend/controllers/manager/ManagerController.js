@@ -4,6 +4,7 @@ const Category = require("../../models/categoryModel");
 const Item = require("../../models/itemModel");
 const User = require("../../models/userModel");
 const Role = require("../../models/roleModel");
+const Order = require("../../models/orderModel");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 
@@ -191,10 +192,67 @@ const getImage = (req, res) => {
   }
 };
 
+const getStats = async (req, res) => {
+  try {
+    const token = req.params.token;
+    console.log("Token:", token);
+    let userId;
+    try {
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      userId = decoded.userId;
+      console.log("Decoded:", decoded);
+    } catch (err) {
+      console.log("JWT Decode Error:", err.message);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+    const restaurant = await Restaurant.findOne({ user: userId });
+    const restaurantId = restaurant.id;
+
+    const items = await Item.find({ restaurant: restaurantId }).select("_id");
+    const totalItems = items.length;
+    const itemIds = items.map((item) => item._id);
+
+    const ordersCount = await Order.countDocuments({
+      "items.item": { $in: itemIds },
+    });
+    const totalRevenue = await Order.aggregate([
+      {
+        $match: {
+          status: "Delivered", // Ensure the status matches the enum value in your schema
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalIncome: { $sum: "$totalPrice" }, // Use the correct field name
+        },
+      },
+    ]);
+
+    const totalUniqueCustomers = await Order.distinct("user", {
+      restaurant: restaurantId,
+    });
+
+    const totalIncome =
+      totalRevenue.length > 0 ? totalRevenue[0].totalIncome : 0;
+
+    return res.status(200).json({
+      totalItems,
+      totalIncome,
+      ordersCount,
+      restaurant,
+      totalUniqueCustomers: totalUniqueCustomers.length,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addMenuItem,
   editMenuItem,
   deleteMenuItem,
   getAllCategories,
   getImage,
+  getStats,
 };
