@@ -35,6 +35,23 @@ const Items = () => {
       });
   }, []);
 
+  const fetchItems = () => {
+    axios
+      .get("/api/allItems")
+      .then((response) => {
+        const fetchedProducts = response.data;
+        setItems(fetchedProducts);
+      })
+      .catch((error) => {
+        console.error("Error fetching the items:", error);
+        toast.error("Error fetching the items");
+      });
+  };
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file && file.size > 2 * 1024 * 1024) {
@@ -65,24 +82,6 @@ const Items = () => {
     }
   };
 
-  useEffect(() => {
-    axios
-      .get("/api/allItems")
-      .then((response) => {
-        const fetchedProducts = response.data.map((item) => {
-          return {
-            ...item,
-            image: item.image?.[0] || "",
-          };
-        });
-        setItems(fetchedProducts);
-      })
-      .catch((error) => {
-        console.error("Error fetching the items:", error);
-        toast.error("Error fetching the items");
-      });
-  }, []);
-
   const handleEditClick = (item) => {
     setCurrentItem(item);
     setIsEditModalOpen(true);
@@ -100,13 +99,9 @@ const Items = () => {
     axios
       .put(`/manager/items/edit`, updatedItem)
       .then((response) => {
-        setItems((prevItems) =>
-          prevItems.map((item) =>
-            item.id === updatedItem.id ? updatedItem : item
-          )
-        );
         setIsEditModalOpen(false);
         toast.success("Item edited successfully!");
+        fetchItems();
       })
       .catch((error) => {
         console.error("Error editing the item:", error);
@@ -119,11 +114,9 @@ const Items = () => {
     axios
       .delete(`/manager/items/delete/${currentItem._id}/${token}`)
       .then((response) => {
-        setItems((prevItems) =>
-          prevItems.filter((item) => item.id !== currentItem._id)
-        );
         setIsDeleteModalOpen(false);
         toast.success(response.data.message);
+        fetchItems();
       })
       .catch((error) => {
         console.error("Error deleting the item:", error);
@@ -141,9 +134,9 @@ const Items = () => {
     axios
       .post("/manager/items/create", newItem)
       .then((response) => {
-        setItems((prevItems) => [...prevItems, response.data]);
         setIsCreateModalOpen(false);
         toast.success("Item created successfully!");
+        fetchItems();
       })
       .catch((error) => {
         console.error("Error creating the item:", error);
@@ -167,7 +160,7 @@ const Items = () => {
             className="overflow-hidden rounded-lg bg-white shadow-md"
           >
             <img
-              src={item.image01}
+              src={`http://localhost:3001` + item.image}
               alt={item.name}
               className="h-48 w-full object-cover"
             />
@@ -409,7 +402,6 @@ const Items = () => {
           </div>
         </div>
       )}
-
       <ToastContainer />
     </div>
   );

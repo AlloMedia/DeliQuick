@@ -1,5 +1,15 @@
 const Restaurant = require("../../models/restaurantModel");
 
+
+const getApprovedRestaurants = async (req, res) => {
+  try {
+      const approvedRestaurants = await Restaurant.find({ isAproved: true });
+      return res.status(200).json(approvedRestaurants);
+  } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getUnapprovedRestaurants = async (req, res) => {
   try {
     const unapprovedRestaurants = await Restaurant.find({ isAproved: false });
@@ -22,5 +32,6 @@ const getAllRestaurants = async (req, res) => {
 
 module.exports = {
   getUnapprovedRestaurants,
-  getAllRestaurants
+  getAllRestaurants,
+  getApprovedRestaurants
 };
