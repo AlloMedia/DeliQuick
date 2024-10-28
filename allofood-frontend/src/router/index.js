@@ -110,16 +110,12 @@ const Router = () => {
 
       {/* Restaurant Management Routes */}
       <Route path="/add-restaurant" element={<AddRestaurant />} />
-      <Route path="/edit-restaurant/:restaurantId" element={<EditRestaurant />} />
-      <Route path="/restaurants/:id" element={<RestaurantDetails />} />
-      {/* RestaurantsSection should be inside the appropriate layout or path, e.g. */}
-      <Route path={`/${user.role.toLowerCase()}/restaurants`} element={<RestaurantsSection />} />
-      <Route path="/" element={<RestaurantsSection />} />
-      <Route path="/restaurants/:id" element={<RestaurantDetails />} />
       <Route path="/restaurant-details/:restaurantId" element={<DetailRestaurant />} />
-      <Route path="/restaurants/:id" element={<RestaurantDetails />} />
-      {/* RestaurantsSection should be inside the appropriate layout or path, e.g. */}
-      <Route path={`/${user.role.toLowerCase()}/restaurants`} element={<RestaurantsSection />} />
+      <Route
+        path="/edit-restaurant/:restaurantId"
+        element={<EditRestaurant />}
+      />
+
       {/* Catch all route for 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
