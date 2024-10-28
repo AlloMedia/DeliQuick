@@ -3,6 +3,7 @@ const Item = require("../../models/itemModel");
 const User = require("../../models/userModel");
 const Restaurant = require("../../models/restaurantModel");
 const category = require("../../models/categoryModel");
+const Cart = require("../../models/cartModel");
 const mongoose = require("mongoose");
 
 const createOrder = async (req, res) => {
@@ -221,9 +222,51 @@ const getAllItems = async (req, res) => {
   }
 };
 
+// Function to add an item to the cart
+const addItemToCart = async (req, res) => {
+    try {
+        const { userId } = req.body; // Assuming you get the user ID from the request body
+        const { itemId, quantity } = req.body;
+
+        // Find the item and check if it is available
+        const item = await Item.findById(itemId);
+        if (!item || item.status !== 'available') {
+            return res.status(404).json({ message: 'Item not found or unavailable' });
+        }
+
+        // Find the cart for the user
+        let cart = await Cart.findOne({ user: userId });
+
+        if (!cart) {
+            // If the cart does not exist, create a new one
+            cart = new Cart({ user: userId, items: [] });
+        }
+
+        // Check if the item already exists in the cart
+        const existingItemIndex = cart.items.findIndex(cartItem => cartItem.item.toString() === itemId);
+
+        if (existingItemIndex !== -1) {
+            // Update the quantity if the item is already in the cart
+            cart.items[existingItemIndex].quantity += quantity;
+        } else {
+            // Add the new item to the cart
+            cart.items.push({ item: itemId, quantity });
+        }
+
+        // Save the cart
+        await cart.save();
+
+        res.status(200).json({ message: 'Item added to cart', cart });
+    } catch (error) {
+        res.status(500).json({ message: 'Error adding item to cart', error: error.message });
+    }
+};
+
+
 module.exports = {
   createOrder,
+  getAllItems, 
+  addItemToCart,
   searchRestaurants,
   trackOrder,
-  getAllItems,
 };

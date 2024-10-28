@@ -3,6 +3,11 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
+const orderRoutes = require('./routes/userRoutes');
+const deleveryRoutes = require('./routes/deliveryRoutes');
+const userRoutes = require('./routes/userRoutes');
+const path = require('path');
+
 const orderRoutes = require("./routes/userRoutes");
 const deleveryRoutes = require("./routes/deliveryRoutes");
 const path = require("path");
@@ -33,6 +38,7 @@ app.use(
     cookie: { secure: false, maxAge: 600000 },
   })
 );
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -40,8 +46,8 @@ app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
 app.use("/delivery", deleveryRoutes);
-app.use("/api", orderRoutes); // Using the correct route
-
+app.use('/api', orderRoutes);  // Using the correct route
+app.use('/user', userRoutes);
 
 // Start the server after connecting to the database
 if (process.env.NODE_ENV !== "test") {

@@ -10,6 +10,7 @@ router.post("/order", authMiddleware, clientController.createOrder);
 router.get('/search', clientController.searchRestaurants);
 router.get('/orders/:orderId/track', authMiddleware, trackOrder);
 router.get("/allItems", clientController.getAllItems);
+router.post("/add", clientController.addItemToCart);
 
 // router.post('/order', authMiddleware, clientController.createOrder);
 

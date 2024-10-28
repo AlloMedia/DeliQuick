@@ -7,6 +7,7 @@ import allRoutes from "../constants/sidebarNavigation";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AddRestaurant from "../views/superadmin/Restaurants/AddRestaurant";
 import EditRestaurant from "views/superadmin/Restaurants/EditRestaurant";
+import DetailRestaurant from "views/superadmin/Restaurants/DetailRestaurant";
 
 import Register from "../views/auth/register";
 import Login from "../views/auth/login";
@@ -118,7 +119,6 @@ const Router = () => {
       <Route path="/restaurants/:id" element={<RestaurantDetails />} />
       {/* RestaurantsSection should be inside the appropriate layout or path, e.g. */}
       <Route path={`/${user.role.toLowerCase()}/restaurants`} element={<RestaurantsSection />} />
-
       {/* Catch all route for 404 */}
       <Route path="*" element={<NotFound />} />
     </Routes>
