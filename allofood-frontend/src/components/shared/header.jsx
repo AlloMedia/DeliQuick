@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { ShoppingCart, User } from "lucide-react";
 import logo from "../../assets/images/res-logo.png";
 import { Link } from "react-router-dom";
+import { useAuth } from "context/auth/AuthContext";
 
 const Header = () => {
+  const { user } = useAuth();
+
   return (
     <header className="w-[85%] mx-auto flex justify-between items-center py-6">
       <div className="flex items-center">
@@ -40,6 +44,24 @@ const Header = () => {
         <Link to="/login">
           <User className="text-gray-700" />
         </Link>
+        {user ? (
+          <Link to="/profile">
+            <User className="text-gray-700" />
+          </Link>
+        ) : (
+          <div className="flex items-center space-x-2">
+            <Link to="/register">
+              <button className="py-2 px-3 text-sm text-white bg-red-500 rounded-lg">
+                Register
+              </button>
+            </Link>
+            <Link to="/login">
+              <button className="py-2 px-3 text-sm text-white bg-gray-800 rounded-lg">
+                Login
+              </button>
+            </Link>
+          </div>
+        )}
       </div>
     </header>
   );
