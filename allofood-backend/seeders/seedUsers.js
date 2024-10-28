@@ -17,19 +17,19 @@ module.exports = async () => {
         name: "Manager",
         email: "manager@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("123456", 10),
+        password: await bcrypt.hash("Manager-123456", 10),
         address: "123, Main Street, City",
-        role: managerRole._id, // Assign role ObjectId
-        isVerified: false,
+        role: managerRole._id,
+        isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       },
       {
         name: "Client",
         email: "client@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("A1234a@/", 10),
+        password: await bcrypt.hash("User-123456", 10),
         address: "123, Main Street, City",
-        role: clientRole._id, // Assign role ObjectId
+        role: clientRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       },
@@ -37,12 +37,12 @@ module.exports = async () => {
         name: "Delivery",
         email: "delivery@gmail.com",
         phone: "0123456789",
-        password: await bcrypt.hash("123456", 10),
+        password: await bcrypt.hash("Delivery-123456", 10),
         address: "123, Main Street, City",
-        role: deliveryRole._id, // Assign role ObjectId
+        role: deliveryRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
-        date: new Date()
+        date: new Date(),
       },
       {
         name: "SuperAdmin",
@@ -50,15 +50,15 @@ module.exports = async () => {
         phone: "0123456789",
         password: await bcrypt.hash("SuperAdmin-123456", 10),
         address: "123, Main Street, City",
-        role: superAdminRole._id, // Assign role ObjectId
+        role: superAdminRole._id,
         isVerified: true,
         lastLogin: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000),
       },
     ];
 
     await User.insertMany(users);
-    console.log('Users seeded successfully');
+    console.log("Users seeded successfully");
   } catch (error) {
-    console.error('Error seeding users:', error);
+    console.error("Error seeding users:", error);
   }
 };

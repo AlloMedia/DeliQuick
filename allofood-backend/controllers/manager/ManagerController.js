@@ -1,6 +1,9 @@
 const Restaurant = require("../../models/restaurantModel");
 const Category = require("../../models/categoryModel");
 const Item = require("../../models/itemModel");
+const User = require("../../models/userModel");
+const Role = require("../../models/roleModel");
+const jwt = require("jsonwebtoken");
 
 const addMenuItem = async (req, res) => {
   try {
@@ -50,9 +53,16 @@ const addMenuItem = async (req, res) => {
 
 const editMenuItem = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, description, stock, price, image, categoryId, restaurantId } =
-      req.body;
+    const {
+      id,
+      name,
+      description,
+      stock,
+      price,
+      image,
+      categoryId,
+      restaurantId,
+    } = req.body;
 
     if (!id) {
       return res.status(400).json({ message: "Item ID is required" });
@@ -95,36 +105,59 @@ const editMenuItem = async (req, res) => {
 
 const deleteMenuItem = async (req, res) => {
   try {
-    const { token, id } = req.params;
-
-    const userId = jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-      if (err) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      return userId._id;
-    });
-
-    const user = await User.findById(userId);
+    const { id, token } = req.params;
 
     if (!id) {
       return res.status(400).json({ message: "Item ID is required" });
     }
 
-    if (!user || user.role !== "manager") {
+    let userId;
+    try {
+      const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+      userId = decoded.userId;
+      console.log("Decoded:", decoded);
+    } catch (err) {
+      console.log("JWT Decode Error:", err.message);
+      return res.status(401).json({ message: "Invalid token" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userRole = await Role.findById(user.role);
+    if (!userRole || userRole.name !== "manager") {
+      console.log("Unauthorized");
       return res.status(401).json({ message: "Unauthorized" });
     }
 
     const item = await Item.findById(id);
-
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    await item.remove();
+    await Item.findByIdAndDelete(id); // Use findByIdAndDelete to remove the item
+    console.log("Item removed:", item);
     return res.status(200).json({ message: "Item deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const getAllCategories = async (req, res) => {
+  try {
+    const categories = await Category.find();
+    return res.status(200).json({ categories });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { addMenuItem, editMenuItem, deleteMenuItem };
+module.exports = {
+  addMenuItem,
+  editMenuItem,
+  deleteMenuItem,
+  getAllCategories,
+};

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 
-const ProductCard = ({image01,price,id,title}) => {
+const ProductCard = ({image01,price,id,name}) => {
 
   return (
     <div className="text-center p-6 border">
@@ -13,7 +13,7 @@ const ProductCard = ({image01,price,id,title}) => {
       />
     </div>
       <h4 className="font-semibold text-sm mb-4">
-        <Link to={`/foods/${id}`} >{title}</Link>
+        <Link to={`/foods/${id}`} >{name}</Link>
       </h4>
       <div className="flex items-center justify-between">
         <p className="text-[#DF2020] font-bold text-base">

@@ -11,21 +11,40 @@ import whyImage from "../assets/images/location.png";
 import testimonialImg from "../assets/images/network.png";
 
 import { useState } from "react";
-import products from "../assets/facke-data/product";
+import { useEffect } from "react";
 import TestimonialSwiper from "../components/ui/swiper/TestimonialSwiper";
+import axios from "../api/config/axios";
 
 const Index = () => {
+  
+
+  const [realProducts, setRealProducts] = useState([]);
   const [category, setCategory] = useState("All");
-  const filteredProducts = products.filter(
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("/api/allItems");
+        setRealProducts(response.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const filteredProducts = realProducts.filter(
     (item) => item.category === category
   );
-  const pizzaProducts = products
-    .filter((item) => item.category === "Pizza")
+  const pizzaProducts = realProducts
+    .filter((item) => item.category === "drinks")
     .slice(0, 4);
-
+  console.log(realProducts);
+  
   function checkCategory() {
     if (category === "All") {
-      return products;
+      return realProducts;
     } else {
       return filteredProducts;
     }
@@ -178,10 +197,10 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-4 gap-8">
-          {checkCategory().map((product) => {
+          {checkCategory().map((realProducts) => {
             return (
-              <div className="mt-5" key={product.id}>
-                <ProductCard {...product} />
+              <div className="mt-5" key={realProducts.id}>
+                <ProductCard {...realProducts } />
               </div>
             );
           })}
