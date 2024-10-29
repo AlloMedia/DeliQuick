@@ -2,6 +2,8 @@ const Order = require("../../models/orderModel");
 const Item = require("../../models/itemModel");
 const User = require("../../models/userModel");
 const Restaurant = require("../../models/restaurantModel");
+const category = require("../../models/categoryModel");
+const Cart = require("../../models/cartModel");
 const mongoose = require("mongoose");
 
 const createOrder = async (req, res) => {
@@ -236,9 +238,52 @@ const getAllItems = async (req, res) => {
   }
 };
 
+// Function to add an item to the cart
+const addItemToCart = async (req, res) => {
+  try {
+      const { userId, productId } = req.body; 
+      const item = await Item.findById(productId);
+      if (!item || item.status !== 'available') {
+          return res.status(404).json({ message: 'Item not found or unavailable' });
+      }
+
+      let cart = await Cart.findOne({ user: userId });
+
+      if (!cart) {
+          cart = new Cart({ user: userId, items: [] });
+      }
+      const existingItemIndex = cart.items.findIndex(cartItem => cartItem.item.toString() === productId);
+
+      if (existingItemIndex !== -1) {
+          cart.items[existingItemIndex].quantity += 1; 
+      } else {
+          cart.items.push({ item: productId, quantity: 1 }); 
+      }
+      await cart.save();
+
+      res.status(200).json({ message: 'Item added to cart', cart });
+  } catch (error) {
+      console.error('Error adding item to cart:', error);
+      res.status(500).json({ message: 'Error adding item to cart', error: error.message });
+  }
+};
+
+const getUserCart = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ user: req.params.userId }).populate('items.item'); 
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    res.json(cart);
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    res.status(500).json({ message: 'Error fetching cart data' });
+  }
+};
+
 module.exports = {
-  createOrder,
   searchRestaurants,
   getAllItems,
-  getUserOrders
+  createOrder,
+  getAllItems, addItemToCart, getUserCart, getUserOrders
 };
