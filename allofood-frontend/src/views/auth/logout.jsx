@@ -12,10 +12,10 @@ const Logout = () => {
             try {
                 await logout();
                 toast.success('Logged out successfully');
-                setTimeout(() => { navigate("/") }, 2000);
+                setTimeout(() => { navigate("/") }, 1500);
             } catch (error) {
-                console.error('Error logging out:', error.response?.data || error.message);
-                toast.error(error.response?.data?.message || 'Failed to log out');
+                console.error('Error logging out:', error.message);
+                toast.error(error.response?.data?.message);
             }
         };
 

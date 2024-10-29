@@ -1,52 +1,46 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import axiosInstance from '../../../api/config/axios';
 import { formatDate, formatTime } from '../../../helpers/date-format';
 import statusStyles from '../../../helpers/status-data';
-import { useAuth } from '../../../context/auth/AuthContext';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Requests = () => {
-  const { user } = useAuth();
-  const [requests, setRequests] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  React.useEffect(() => {
-    if (user) fetchRequests(user._id);
-  }, [user]);
+  useEffect(() => {
+    fetchRequests();
+  }, []);
 
-  const fetchRequests = async (userId) => {
+  const fetchRequests = async () => {
     try {
       setLoading(true);
-
-      const response = await axiosInstance.get(`/delivery/requests?deliveryId=${userId}`);
-      console.log(response);
-      setRequests(response.data);
-      setLoading(false);
-      toast.success(response.data.message);
+      const response = await axiosInstance.get('/delivery/requests');
+      
+      if (response.data.success) {
+        setRequests(response.data.data);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching requests:', error);
+      toast.error(error.response?.data?.message || 'Error fetching requests');
+    } finally {
       setLoading(false);
-      toast.error(error.message);
     }
   };
 
   const handleAcceptRequest = async (orderId) => {
     try {
       setLoading(true);
+      const response = await axiosInstance.put('/delivery/accept-request', { orderId });
 
-      const response = await axiosInstance.put(
-        `/delivery/accept-request`, {orderId: orderId, deliveryId: user._id}
-      );
-
-      console.log(response);
-      fetchRequests(user._id);
-      setLoading(false);
+      await fetchRequests();
       toast.success(response.data.message);
     } catch (error) {
-      console.error(error);
+      console.error('Error accepting request:', error);
+      toast.error(error.response?.data?.message || 'Error accepting request');
+    } finally {
       setLoading(false);
-      toast.error(error.message);
     }
   };
 
