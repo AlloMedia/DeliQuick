@@ -1,10 +1,35 @@
 const request = require('supertest');
-const app = require('../../app'); // Ensure the correct path to your app file
-const Restaurant = require('../../models/Restaurant'); // Path to your Restaurant model
+const app = require('../../app');
+const Restaurant = require('../../models/Restaurant'); 
 const mongoose = require('mongoose');
 
 // Mock restaurant data
 const sampleRestaurantId = new mongoose.Types.ObjectId().toString();
+
+describe('GET /api/superadmin/restaurants/:restaurantId', () => {
+  beforeEach(async () => {
+    await Restaurant.create({
+      _id: sampleRestaurantId,
+      name: 'Sample Restaurant',
+      address: '123 Test St',
+      phoneNumber: '123-456-7890',
+    });
+  });
+
+  afterEach(async () => {
+    await Restaurant.findByIdAndDelete(sampleRestaurantId);
+  });
+
+  it('should return restaurant details for a valid restaurantId', async () => {
+    const response = await request(app)
+      .get(`/api/superadmin/restaurants/${sampleRestaurantId}`)
+      .expect(200);
+
+    expect(response.body.restaurant).toHaveProperty('name', 'Sample Restaurant');
+    expect(response.body.restaurant).toHaveProperty('address', '123 Test St');
+    expect(response.body.restaurant).toHaveProperty('phoneNumber', '123-456-7890');
+  });
+});
 
 describe('DELETE /api/superadmin/restaurants/:restaurantId', () => {
   let token;
