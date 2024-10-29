@@ -62,7 +62,7 @@ const getRestaurantById = async (req, res) => {
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671a22395f62ac2f31ccecd2";
+    const superAdminId = "671f4ed7e74bd1a55164d28e";
 
     const { user, name, description, address, phone, status, isApproved } =
       req.body;
@@ -151,7 +151,7 @@ const deleteRestaurant = async (req, res) => {
 const editRestaurant = async (req, res) => {
   try {
     
-    const superAdminId = "671630836d5a9e540f577459";
+    const superAdminId = "671f4ed7e74bd1a55164d28e";
 
     const { restaurantId } = req.params;
     const {
@@ -229,6 +229,32 @@ const searchRestaurants = async (req, res) => {
 };
 
 
+const getRestaurantDetails = async (req, res) => {
+  try {
+    const { restaurantId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(restaurantId)) {
+      return res.status(400).json({ message: "Invalid restaurant ID format" });
+    }
+    const restaurant = await Restaurant.findById(restaurantId);
+    if (!restaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+    restaurant.images.banner = `/${restaurant.images.banner}`;
+    restaurant.images.profileImage = `/${restaurant.images.profileImage}`;
+    restaurant.images.slides = restaurant.images.slides.map(image => `/${image}`);
+
+    res.status(200).json({
+      message: "Restaurant details fetched successfully.",
+      restaurant,
+    });
+  } catch (error) {
+    console.error("Error fetching restaurant details:", error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+};
+
+
+
 module.exports = {
   rejectOrAcceptRestaurant,
   addRestaurant,
@@ -236,4 +262,4 @@ module.exports = {
     { name: 'banner', maxCount: 1 },
     { name: 'profileImage', maxCount: 1 },
     { name: 'slides', maxCount: 10 },
-  ]), editRestaurant, searchRestaurants, deleteRestaurant, getRestaurantById };
+  ]), editRestaurant, searchRestaurants, deleteRestaurant, getRestaurantById, getRestaurantDetails };

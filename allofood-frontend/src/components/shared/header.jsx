@@ -5,6 +5,16 @@ import { Link } from "react-router-dom";
 import { useAuth } from "context/auth/AuthContext";
 import { useState } from "react";
 
+const CartLink = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+  const userId = user ? user._id : '';
+
+  return (
+    <Link to={`/cart/${userId}`}>
+      <ShoppingCart className="text-gray-700" />
+    </Link>
+  );
+};
 const Header = () => {
   const { user } = useAuth();
 
@@ -45,9 +55,7 @@ const Header = () => {
         </ul>
       </nav>
       <div className="flex items-center space-x-4">
-        <Link to="/cart">
-          <ShoppingCart className="text-gray-700" />
-        </Link>
+      <CartLink />
         <Link to="/login">
           <User className="text-gray-700" />
         </Link>

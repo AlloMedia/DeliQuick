@@ -3,16 +3,14 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const superadminRoutes = require("./routes/superadminRoutes");
-const orderRoutes = require("./routes/userRoutes");
+const orderRoutes = require("./routes/userRoutes"); // Correct declaration
 const deleveryRoutes = require("./routes/deliveryRoutes");
-const path = require("path");
+const userRoutes = require("./routes/userRoutes");
+const clientRoutes = require("./routes/clientRoutes");
+const path = require("path"); // Correct declaration
 
 require("dotenv").config();
 const cors = require("cors");
-
-// const userRoutes = require('./routes/userRoutes');
-// const deliveryRoutes = require('./routes/deliveryRoutes');
-
 const managerRoutes = require("./routes/managerRoutes");
 
 const app = express();
@@ -34,14 +32,17 @@ app.use(
   })
 );
 
+// Serve static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Define routes
 app.use("/auth", authRoutes);
 app.use("/superadmin", superadminRoutes);
 app.use("/manager", managerRoutes);
 app.use("/delivery", deleveryRoutes);
 app.use("/api", orderRoutes); // Using the correct route
-
+app.use("/user", userRoutes);
+app.use("/client", clientRoutes);
 
 // Start the server after connecting to the database
 if (process.env.NODE_ENV !== "test") {
