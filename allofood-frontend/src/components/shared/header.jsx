@@ -3,6 +3,7 @@ import { ShoppingCart, User } from "lucide-react";
 import logo from "../../assets/images/res-logo.png";
 import { Link } from "react-router-dom";
 import { useAuth } from "context/auth/AuthContext";
+import { useState } from "react";
 
 const CartLink = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -16,6 +17,12 @@ const CartLink = () => {
 };
 const Header = () => {
   const { user } = useAuth();
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   return (
     <header className="w-[85%] mx-auto flex justify-between items-center py-6">
@@ -53,9 +60,33 @@ const Header = () => {
           <User className="text-gray-700" />
         </Link>
         {user ? (
-          <Link to="/profile">
-            <User className="text-gray-700" />
-          </Link>
+          <div className="relative">
+          <button
+            className="flex items-center space-x-2"
+            onClick={toggleDropdown}
+          >
+            <img src={user.image} alt="User Avatar" className="w-8 h-8 rounded-full" />
+            <div>
+            <div className="text-gray-700">{user.name}</div>
+            <div className="text-gray-700">{user.email}</div>
+            </div>
+            
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg">
+              <Link to="/switch-to-restaurant">
+                <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Switch to restaurant
+                </button>
+              </Link>
+              <a href="/logout">
+                <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  Logout
+                </button>
+              </a>
+            </div>
+          )}
+        </div>
         ) : (
           <div className="flex items-center space-x-2">
             <Link to="/register">

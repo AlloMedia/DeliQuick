@@ -3,13 +3,12 @@ const Category = require("../models/categoryModel");
 const Restaurant = require("../models/restaurantModel");
 
 module.exports = async () => {
-    try {
-        await Item.deleteMany({});
-        
-        // Assuming you have predefined category and restaurant IDs
-        const category = await Category.findOne({ name: "drinks" });
-        const restaurant = await Restaurant.findOne({ name: "Restaurant 1" });
+  try {
+    await Item.deleteMany({});
 
+    // Assuming you have predefined category and restaurant IDs
+    const category = await Category.findOne({ name: "drinks" });
+    const restaurant = await Restaurant.findOne({ name: "Restaurant 1" });
         const items = [
             {
                 name: "Coca Cola",
@@ -53,11 +52,11 @@ module.exports = async () => {
             },
         ];
 
-        for (let item of items) {
-            await Item.create(item);
-        }
-        console.log("Items seeded successfully");
-    } catch (error) {
-        console.error("Error seeding items:", error);
+    for (let item of items) {
+      await Item.create(item);
     }
+    console.log("Items seeded successfully");
+  } catch (error) {
+    console.error("Error seeding items:", error);
+  }
 };
