@@ -30,13 +30,8 @@ module.exports = async () => {
             quantity: 2,
             price: 10.0,
           },
-          {
-            item: items[1]._id,
-            quantity: 1,
-            price: 20.0,
-          },
         ],
-        totalPrice: 40.0,
+        totalPrice: 10.0,
         status: "On the Way",
       },
       {
@@ -53,7 +48,7 @@ module.exports = async () => {
             price: 20.0,
           },
         ],
-        totalPrice: 45.0,
+        totalPrice: 35.0,
         status: "Ready",
       },
 
@@ -71,7 +66,7 @@ module.exports = async () => {
             price: 20.0,
           },
         ],
-        totalPrice: 45.0,
+        totalPrice: 35.0,
         status: "In Progress",
       },
       {
@@ -88,41 +83,19 @@ module.exports = async () => {
             price: 20.0,
           },
         ],
-        totalPrice: 45.0,
+        totalPrice: 35.0,
         status: "In Progress",
       },
       {
-        user: users[0]._id,
+        user: users[1]._id,
         items: [
           {
             item: items[0]._id,
             quantity: 2,
             price: 10.0,
           },
-          {
-            item: items[1]._id,
-            quantity: 1,
-            price: 20.0,
-          },
         ],
-        totalPrice: 40.0,
-        status: "Pending",
-      },
-      {
-        user: users[0]._id,
-        items: [
-          {
-            item: items[0]._id,
-            quantity: 2,
-            price: 10.0,
-          },
-          {
-            item: items[1]._id,
-            quantity: 1,
-            price: 20.0,
-          },
-        ],
-        totalPrice: 40.0,
+        totalPrice: 10.0,
         status: "Pending",
       },
     ];

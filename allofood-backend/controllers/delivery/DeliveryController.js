@@ -49,15 +49,20 @@ const notifyDelivery = async (orderId) => {
 
 const acceptDelivery = async (req, res) => {
   try {
-    const { orderId, deliveryId } = req.body; 
+    const { orderId } = req.body;
+    const deliveryId = req.user.userId;
+    
+    console.log('orderId:', orderId, 'deliveryId:', deliveryId);
 
     const order = await Order.findById(orderId);
     if (!order || order.status !== "Ready") {
       return res.status(400).json({ error: "Order not available for acceptance" });
     }
 
+    console.log('order:', order);
+
     if (!order.notifiedDeliveryPeople.includes(deliveryId)) {
-      return res.status(403).json({ error: "You were not notified about this order" });
+      return res.status(403).json({ error: "Not authorized to perform this action" });
     }
 
     order.deliveryPerson = deliveryId;

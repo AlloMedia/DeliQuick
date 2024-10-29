@@ -8,7 +8,9 @@ module.exports = async () => {
         
         // Assuming you have predefined category and restaurant IDs
         const category = await Category.findOne({ name: "drinks" });
-        const restaurant = await Restaurant.findOne({ name: "Restaurant 1" });
+
+        const restaurantNames = ["Restaurant 1", "Restaurant 2"];
+        const restaurants = await Restaurant.find({ name: { $in: restaurantNames } });
 
         const items = [
             {
@@ -17,7 +19,7 @@ module.exports = async () => {
                 price: 1.5,
                 stock: 100,
                 description: "Refreshing beverage",
-                restaurant: restaurant._id,
+                restaurant: restaurants[0]._id,
                 status: 'available'
             },
             {
@@ -26,7 +28,7 @@ module.exports = async () => {
                 price: 5.0,
                 stock: 50,
                 description: "Delicious beef burger",
-                restaurant: restaurant._id,
+                restaurant: restaurants[1]._id,
                 status: 'available'
             },
             {
@@ -35,7 +37,7 @@ module.exports = async () => {
                 price: 2.0,
                 stock: 200,
                 description: "Crispy potato chips",
-                restaurant: restaurant._id,
+                restaurant: restaurants[1]._id,
                 status: 'available'
             },
             {
@@ -44,7 +46,7 @@ module.exports = async () => {
                 price: 3.0,
                 stock: 80,
                 description: "Creamy vanilla ice cream",
-                restaurant: restaurant._id,
+                restaurant: restaurants[1]._id,
                 status: 'available'
             },
         ];
