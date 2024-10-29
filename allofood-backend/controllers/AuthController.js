@@ -313,14 +313,19 @@ async function resetPassword(req, res) {
 }
 
 function logout(req, res) {
-  req.user = null;
-  req.cookies["authToken"] = null;
-  res.cookie("authToken", "", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
-  res.json({ success: "Logged out successfully" });
+  try {
+    req.user = null;
+    req.cookies["authToken"] = null;
+    res.cookie("authToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.json({ success: "Logged out successfully" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 function me(req, res) {

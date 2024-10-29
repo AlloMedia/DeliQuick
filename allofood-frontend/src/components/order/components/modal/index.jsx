@@ -70,14 +70,6 @@ const OrderDetails = ({ isOpen, onRequestClose, order }) => {
               ))}
             </tbody>
           </table>
-          <div className='py-2 border-dotted border-t-2 text-sm  flex justify-between'>
-            <p>items (4)</p>
-            <p>${order.totalPrice.toFixed(2)}</p>
-          </div>
-          <div className='py-2 border-t text-sm flex justify-between'>
-            <p>Tax</p>
-            <p>$3.45</p>
-          </div>
           <div className='pt-2 border-dotted border-t-2 text-sm font-bold flex justify-between'>
           <span>Total</span>
           <p>${order.totalPrice.toFixed(2)}</p>

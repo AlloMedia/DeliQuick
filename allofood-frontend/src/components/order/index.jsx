@@ -17,29 +17,20 @@ const Orders = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    if (user?._id) fetchOrders(user._id);
-  }, [user]);
+    fetchOrders();
+  }, []);
 
-  const fetchOrders = async (userId) => {
+  const fetchOrders = async () => {
     try {
       setLoading(true);
-      let response;
-      
-      if (user?.role === 'manager') {
-        response = await axiosInstance.get('/manager/orders');
-      } else {
-        // Ensure the deliveryId is passed as a string query parameter
-        response = await axiosInstance.get('/delivery/orders', {
-          params: {
-            deliveryId: userId
-          }
-        });
-      }
-      
+      const endpoint = user?.role === 'manager' ? '/manager/orders' : '/delivery/orders';  
+      const response = await axiosInstance.get(endpoint);
+
       setOrders(response.data);
       setFilteredOrders(response.data);
+
     } catch (error) {
-      console.error('Error fetching orders:', error.response?.data || error.message);
+      console.error('Error fetching orders:', error);
       toast.error(error.response?.data?.message || 'Failed to fetch orders');
     } finally {
       setLoading(false);
@@ -56,29 +47,29 @@ const Orders = () => {
   };
 
   const handleUpdateStatus = async (orderId, newStatus) => {
-    if (!user?._id) {
-      toast.error('User not authenticated');
-      return;
-    }
-    setLoading(true);
     try {
-      user?.role === 'manager' 
-        ? 
-          (await axiosInstance.put(`/manager/orders/${orderId}`, { status: newStatus }))
-        : 
-          (await axiosInstance.put(`/delivery/orders/${orderId}`, { status: newStatus }));
+      setLoading(true);
+      const endpoint = user?.role === 'manager' 
+        ? `/manager/orders/${orderId}`
+        : `/delivery/orders/${orderId}`;
 
-      await fetchOrders(user._id); // Refresh the order list
-      toast.success('Order status updated successfully');
-      closeEditModal(); // Close the modal after successful update
+      const response = await axiosInstance.put(endpoint, { 
+        status: newStatus 
+      });
+
+      await fetchOrders();
+      toast.success(response.data.message);
+      closeEditModal();
+
     } catch (error) {
-      console.error(error);
+      console.error('Error updating order:', error);
       toast.error(error.response?.data?.message || 'Failed to update order status');
     } finally {
       setLoading(false);
     }
   };
 
+  // Modal handlers
   const openModal = (order) => {
     setSelectedOrder(order);
     setIsModalOpen(true);

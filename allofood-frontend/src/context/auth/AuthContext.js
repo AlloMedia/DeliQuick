@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axiosInstance from "../../api/config/axios.js";
-import { redirect } from "react-router-dom";
 
 const AuthContext = createContext(null);
 
@@ -67,9 +66,8 @@ export const AuthProvider = ({ children }) => {
 
       await axiosInstance.get("auth/logout");
 
-      return redirect("/login");
     } catch (error) {
-      console.error(error.response.data.error);
+      console.error(error.response);      
     }
   };
 

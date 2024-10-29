@@ -108,9 +108,8 @@ export const useLoginForm = () => {
           redirectPath = "/delivery/dashboard";
         }
 
-        setTimeout(() => {
-          navigate(redirectPath, { replace: true });
-        }, 1500);
+        navigate(redirectPath, { replace: true });
+        
       } else throw new Error(result.error);
     } catch (error) {
       const newAttempts = loginAttempts + 1;

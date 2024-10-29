@@ -3,12 +3,15 @@ const Category = require("../models/categoryModel");
 const Restaurant = require("../models/restaurantModel");
 
 module.exports = async () => {
-  try {
-    await Item.deleteMany({});
+    try {
+        await Item.deleteMany({});
+        
+        // Assuming you have predefined category and restaurant IDs
+        const category = await Category.findOne({ name: "drinks" });
 
-    // Assuming you have predefined category and restaurant IDs
-    const category = await Category.findOne({ name: "drinks" });
-    const restaurant = await Restaurant.findOne({ name: "Restaurant 1" });
+        const restaurantNames = ["Restaurant 1", "Restaurant 2"];
+        const restaurants = await Restaurant.find({ name: { $in: restaurantNames } });
+
         const items = [
             {
                 name: "Coca Cola",
@@ -16,9 +19,9 @@ module.exports = async () => {
                 price: 1.5,
                 stock: 100,
                 description: "Refreshing beverage",
-                restaurant: restaurant._id,
-                status: 'available',
-                image: "coca_cola.jpg" 
+                restaurant: restaurants[0]._id,
+                image: "https://example.com/coca-cola.jpg",
+                status: 'available'
             },
             {
                 name: "Burger",
@@ -26,9 +29,9 @@ module.exports = async () => {
                 price: 5.0,
                 stock: 50,
                 description: "Delicious beef burger",
-                restaurant: restaurant._id,
-                status: 'available',
-                image: "burger.jpg" 
+                restaurant: restaurants[1]._id,
+                image: "https://example.com/coca-cola.jpg",
+                status: 'available'
             },
             {
                 name: "Chips",
@@ -36,9 +39,9 @@ module.exports = async () => {
                 price: 2.0,
                 stock: 200,
                 description: "Crispy potato chips",
-                restaurant: restaurant._id,
-                status: 'available',
-                image: "chips.jpg" 
+                restaurant: restaurants[1]._id,
+                image: "https://example.com/coca-cola.jpg",
+                status: 'available'
             },
             {
                 name: "Ice Cream",
@@ -46,17 +49,17 @@ module.exports = async () => {
                 price: 3.0,
                 stock: 80,
                 description: "Creamy vanilla ice cream",
-                restaurant: restaurant._id,
-                status: 'available',
-                image: "ice_cream.jpg" 
+                restaurant: restaurants[1]._id,
+                image: "https://example.com/coca-cola.jpg",
+                status: 'available'
             },
         ];
 
-    for (let item of items) {
-      await Item.create(item);
+        for (let item of items) {
+            await Item.create(item);
+        }
+        console.log("Items seeded successfully");
+    } catch (error) {
+        console.error("Error seeding items:", error);
     }
-    console.log("Items seeded successfully");
-  } catch (error) {
-    console.error("Error seeding items:", error);
-  }
 };

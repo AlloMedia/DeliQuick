@@ -11,10 +11,9 @@ const axiosInstance = axios.create({
   },
 });
 
-// Add a request interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -27,7 +26,6 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Add a response interceptor
 axiosInstance.interceptors.response.use(
   (response) => {
     console.log("Response received:", response);
@@ -35,7 +33,8 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
       window.location.href = "/login";
     }
     console.error("Response error:", error);
