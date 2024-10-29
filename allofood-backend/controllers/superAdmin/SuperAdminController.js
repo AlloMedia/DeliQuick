@@ -62,7 +62,7 @@ const getRestaurantById = async (req, res) => {
 // Ajouter un nouveau restaurant
 const addRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671f4ed7e74bd1a55164d28e";
+    const superAdminId = "671f9c9ac6a26b6919aa1379";
 
     const { user, name, description, address, phone, status, isApproved } =
       req.body;
@@ -150,7 +150,7 @@ const deleteRestaurant = async (req, res) => {
 
 const editRestaurant = async (req, res) => {
   try {
-    const superAdminId = "671f4ed7e74bd1a55164d28e";
+    const superAdminId = "671f9c9ac6a26b6919aa1379";
 
     const { restaurantId } = req.params;
     const {

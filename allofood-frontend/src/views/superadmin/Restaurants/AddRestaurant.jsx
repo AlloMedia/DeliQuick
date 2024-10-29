@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../api/config/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,15 @@ const AddRestaurant = () => {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user')); 
+    if (user && user._id) {
+      setRestaurant((prev) => ({ ...prev, user: user._id })); 
+    } else {
+      toast.error("User ID not found in local storage."); 
+    }
+  }, []);
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setRestaurant((prev) => ({ ...prev, [name]: value }));
@@ -49,7 +58,6 @@ const AddRestaurant = () => {
       },
     }));
   };
-  
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -79,7 +87,6 @@ const AddRestaurant = () => {
       toast.error("Failed to add restaurant: " + (error.response?.data?.message || error.message));
     }
   };
-  
 
   return (
     <div className="container mx-auto p-4">
@@ -104,18 +111,6 @@ const AddRestaurant = () => {
           <textarea
             name="description"
             value={restaurant.description}
-            onChange={handleInputChange}
-            className="block p-2 border border-gray-300 w-full"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label>User ID:</label>
-          <input
-            type="text"
-            name="user"
-            value={restaurant.user}
             onChange={handleInputChange}
             className="block p-2 border border-gray-300 w-full"
             required
@@ -154,7 +149,6 @@ const AddRestaurant = () => {
                 className="block p-2 border border-gray-300 w-full"
             />
         </div>
-
 
         <div className="mb-4">
           <label>Address:</label>
