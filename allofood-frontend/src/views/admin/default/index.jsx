@@ -44,7 +44,7 @@ const Dashboard = () => {
           subtitle={stats?.totalIncome + '$'}
         />
         <Widget
-          icon={<IoDocuments className="h-6 w-6" />}
+          icon={<i class="bi bi-ui-checks-grid"></i>}
           title={"Menu Items"}
           subtitle={stats?.totalItems + ' items'}
         />
@@ -64,9 +64,9 @@ const Dashboard = () => {
           subtitle={stats?.totalUniqueCustomers + ' customers'}
         />
         <Widget
-          icon={<IoMdHome className="h-6 w-6" />}
-          title={"Total Projects"}
-          subtitle={"$2433"}
+          icon={<i className="bi bi-patch-check-fill"></i>}
+          title={"Account"}
+          subtitle={"Verified"}
         />
       </div>
 
