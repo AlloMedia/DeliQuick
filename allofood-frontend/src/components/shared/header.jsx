@@ -57,18 +57,15 @@ const Header = () => {
       </nav>
       <div className="flex items-center space-x-4">
       <CartLink />
-        <Link to="/login">
-          <User className="text-gray-700" />
-        </Link>
         {user ? (
           <div className="relative">
           <button
             className="flex items-center space-x-2"
             onClick={toggleDropdown}
           >
-            <img src={PublicRoute('../src/assets/images/pp.jpg')} alt="User Avatar" className="w-8 h-8 rounded-full" />
+            <img src={'http://localhost:3001/uploads/pp.jpg'} alt="User Avatar" className="w-8 h-8 rounded-full" />
             <div>
-            <div className="text-gray-700">{user.name}</div>
+            <div className="text-gray-700" style={{textAlign:'left'}}>{user.name}</div>
             <div className="text-gray-700">{user.email}</div>
             </div>
             
