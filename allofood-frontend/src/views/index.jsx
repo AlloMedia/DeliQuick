@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "../api/config/axios";
 import heroImg from "../assets/images/hero.png";
 import Category from "../components/ui/category/Category";
 import Feature from "../components/ui/feature/Feature";
@@ -12,8 +13,8 @@ import testimonialImg from "../assets/images/network.png";
 
 import { useState } from "react";
 import { useEffect } from "react";
-import TestimonialSwiper from "../components/ui/swiper/TestimonialSwiper";
-import axios from "../api/config/axios";
+import TestimonialSwiper from "../components/ui/swiper/TestimonialSwiper"; 
+import RestaurantsSection from "../components/restaurants/index";
 
 const Index = () => {
   
@@ -149,8 +150,11 @@ const Index = () => {
           similique.
         </p>
 
-        <Feature />
       </section>
+
+
+      <RestaurantsSection />
+
 
       <section className="w-[85%] mx-auto mt-24">
         <h2 className="text-3xl text-center font-bold mb-8">Popular Foods</h2>

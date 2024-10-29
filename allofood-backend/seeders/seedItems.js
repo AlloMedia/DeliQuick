@@ -20,6 +20,7 @@ module.exports = async () => {
                 stock: 100,
                 description: "Refreshing beverage",
                 restaurant: restaurants[0]._id,
+                image: "https://example.com/coca-cola.jpg",
                 status: 'available'
             },
             {
@@ -29,6 +30,7 @@ module.exports = async () => {
                 stock: 50,
                 description: "Delicious beef burger",
                 restaurant: restaurants[1]._id,
+                image: "https://example.com/coca-cola.jpg",
                 status: 'available'
             },
             {
@@ -38,6 +40,7 @@ module.exports = async () => {
                 stock: 200,
                 description: "Crispy potato chips",
                 restaurant: restaurants[1]._id,
+                image: "https://example.com/coca-cola.jpg",
                 status: 'available'
             },
             {
@@ -47,6 +50,7 @@ module.exports = async () => {
                 stock: 80,
                 description: "Creamy vanilla ice cream",
                 restaurant: restaurants[1]._id,
+                image: "https://example.com/coca-cola.jpg",
                 status: 'available'
             },
         ];

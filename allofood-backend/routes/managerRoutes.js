@@ -14,5 +14,6 @@ router.put("/items/edit", managerController.editMenuItem);
 router.delete("/items/delete/:id/:token", managerController.deleteMenuItem);
 router.get("/categories", managerController.getAllCategories);
 router.get("/uploads/:filename", managerController.getImage);
+router.get("/stats/:token", managerController.getStats);
 
 module.exports = router;

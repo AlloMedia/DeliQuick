@@ -24,6 +24,13 @@ const EditRestaurant = () => {
   const { restaurantId } = useParams();
 
   useEffect(() => {
+
+    const user = JSON.parse(localStorage.getItem('user')); 
+    if (user && user._id) {
+      setRestaurant((prev) => ({ ...prev, user: user._id })); 
+    } else {
+      toast.error("User ID not found in local storage."); 
+    };
     const fetchRestaurant = async () => {
       try {
         const response = await axiosInstance.get(`/superadmin/restaurant/${restaurantId}`);
@@ -128,18 +135,6 @@ const EditRestaurant = () => {
           <textarea
             name="description"
             value={restaurant.description}
-            onChange={handleInputChange}
-            className="block p-2 border border-gray-300 w-full"
-            required
-          />
-        </div>
-
-        <div className="mb-4">
-          <label>User ID:</label>
-          <input
-            type="text"
-            name="user"
-            value={restaurant.user}
             onChange={handleInputChange}
             className="block p-2 border border-gray-300 w-full"
             required

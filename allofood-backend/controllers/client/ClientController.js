@@ -3,8 +3,8 @@ const Item = require("../../models/itemModel");
 const User = require("../../models/userModel");
 const Restaurant = require("../../models/restaurantModel");
 const category = require("../../models/categoryModel");
+const Cart = require("../../models/cartModel");
 const mongoose = require("mongoose");
-
 
 const createOrder = async (req, res) => {
   try {
@@ -90,7 +90,6 @@ const createOrder = async (req, res) => {
         name: item.name,
       });
 
-      // Add to item updates array instead of updating immediately
       itemUpdates.push({
         updateOne: {
           filter: { _id: item._id },
@@ -131,9 +130,65 @@ const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Error placing order:", error);
-
     return res.status(500).json({
       message: "Internal server error while placing order",
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "An unexpected error occurred",
+    });
+  }
+};
+
+const getUserOrders = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        message: "Invalid user ID format",
+      });
+    }
+
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const orders = await Order.find({ user: userId })
+      .populate({
+        path: "items.item",
+        select: "name image price description",
+        model: "Item",
+      })
+      .sort({ createdAt: -1 });
+
+    const formattedOrders = orders.map((order) => ({
+      id: order._id,
+      status: order.status,
+      totalPrice: order.totalPrice,
+      createdAt: order.createdAt,
+      items: order.items.map((item) => ({
+        name: item.item.name,
+        image: item.item.image,
+        price: item.price,
+        quantity: item.quantity,
+        description: item.item.description,
+      })),
+      address: order.address,
+      deliveryPerson: order.deliveryPerson,
+    }));
+
+    return res.status(200).json({
+      message: "Orders retrieved successfully",
+      orders: formattedOrders,
+    });
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    return res.status(500).json({
+      message: "Internal server error while fetching orders",
       error:
         process.env.NODE_ENV === "development"
           ? error.message
@@ -180,27 +235,6 @@ const searchRestaurants = async (req, res) => {
   }
 };
 
-const trackOrder = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    
-    // Find the order by ID
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-    // Return the status and last updated timestamp
-    return res.status(200).json({
-      message: 'Order status fetched successfully',
-      status: order.status,
-      updatedAt: order.updatedAt,
-    });
-  } catch (error) {
-    console.error('Error tracking order:', error);
-    return res.status(500).json({
-      message: 'Error fetching order status',
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal Server Error',
-    });
 const getAllItems = async (req, res) => {
   try {
     const items = await Item.find().limit(20).populate("category", "name");
@@ -216,10 +250,60 @@ const getAllItems = async (req, res) => {
   }
 };
 
-module.exports = {
-  createOrder,
-  searchRestaurants,
-  trackOrder,
-  getAllItems,
+// Function to add an item to the cart
+const addItemToCart = async (req, res) => {
+  try {
+    const { userId, productId } = req.body;
+    const item = await Item.findById(productId);
+    if (!item || item.status !== "available") {
+      return res.status(404).json({ message: "Item not found or unavailable" });
+    }
+
+    let cart = await Cart.findOne({ user: userId });
+
+    if (!cart) {
+      cart = new Cart({ user: userId, items: [] });
+    }
+    const existingItemIndex = cart.items.findIndex(
+      (cartItem) => cartItem.item.toString() === productId
+    );
+
+    if (existingItemIndex !== -1) {
+      cart.items[existingItemIndex].quantity += 1;
+    } else {
+      cart.items.push({ item: productId, quantity: 1 });
+    }
+    await cart.save();
+
+    res.status(200).json({ message: "Item added to cart", cart });
+  } catch (error) {
+    console.error("Error adding item to cart:", error);
+    res
+      .status(500)
+      .json({ message: "Error adding item to cart", error: error.message });
+  }
 };
 
+const getUserCart = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ user: req.params.userId }).populate(
+      "items.item"
+    );
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+    res.json(cart);
+  } catch (error) {
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ message: "Error fetching cart data" });
+  }
+};
+
+module.exports = {
+  searchRestaurants,
+  getAllItems,
+  createOrder,
+  addItemToCart,
+  getUserCart,
+  getUserOrders,
+};

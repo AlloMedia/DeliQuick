@@ -67,7 +67,6 @@ const Restaurants = () => {
   }, 300); 
 
   const deleteRestaurant = async (restaurantId) => {
-    // Show confirmation dialog using SweetAlert2
     const result = await Swal.fire({
       title: 'Are you sure?',
       text: "Do you want to delete this restaurant? This action cannot be undone.",
@@ -82,10 +81,9 @@ const Restaurants = () => {
     if (result.isConfirmed) {
       try {
         const response = await axiosInstance.delete(`/superadmin/restaurants/${restaurantId}`);
-        toast.success(response.data.message); // Notify success
-        fetchAllRestaurants(); // Refresh list after deletion
+        toast.success(response.data.message);
+        fetchAllRestaurants();
 
-        // Show success message in SweetAlert2
         Swal.fire({
           title: 'Deleted!',
           text: 'The restaurant has been deleted.',
@@ -93,11 +91,11 @@ const Restaurants = () => {
           confirmButtonColor: '#3085d6',
         });
       } catch (error) {
-        console.error("Error deleting restaurant:", error.response); // Log the full error response
-        toast.error("Failed to delete restaurant: " + (error.response?.data?.message || error.message)); // Notify error
+        console.error("Error deleting restaurant:", error.response);
+        toast.error("Failed to delete restaurant: " + (error.response?.data?.message || error.message));
       }
     } else {
-      toast.info('Restaurant deletion canceled'); // Notify cancellation
+      toast.info('Restaurant deletion canceled');
     }
   };
 
@@ -151,6 +149,12 @@ const Restaurants = () => {
                   <td className="px-6 py-4">{restaurant.phone}</td>
                   <td className="px-6 py-4">{restaurant.isAproved ? 'Approved' : 'Not Approved'}</td>
                   <td className="px-6 py-4">
+                    <button
+                      onClick={() => navigate(`/restaurant-details/${restaurant._id}`)} 
+                      className="text-white bg-blue-600 hover:bg-blue-700 p-2 rounded mr-2"
+                    >
+                      View Details
+                    </button>
                     <button
                       onClick={() => deleteRestaurant(restaurant._id)}
                       className="text-white bg-red-600 hover:bg-red-700 p-2 rounded"

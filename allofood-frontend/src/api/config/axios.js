@@ -17,6 +17,7 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    console.log("Request sent with config:", config);
     return config;
   },
   (error) => {
@@ -27,6 +28,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
   (response) => {
+    console.log("Response received:", response);
     return response;
   },
   (error) => {
@@ -35,7 +37,8 @@ axiosInstance.interceptors.response.use(
       localStorage.removeItem("user");
       window.location.href = "/login";
     }
-    return Promise.reject(error.response?.data || error);
+    console.error("Response error:", error);
+    return Promise.reject(error);
   }
 );
 

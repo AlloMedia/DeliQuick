@@ -7,25 +7,20 @@ const {
   upload,
 } = require("../controllers/superAdmin/SuperAdminController");
 
-router.post('/add', upload, addRestaurant);
+router.post("/add", upload, addRestaurant);
 router.put("/edit/:restaurantId", upload, superAdminController.editRestaurant);
 router.get("/search", superAdminController.searchRestaurants);
-router.get('/restaurant/:restaurantId', superAdminController.getRestaurantById);
-router.get('/restaurants/approved', RestaurantController.getApprovedRestaurants);
-
-
+router.get("/restaurant/:restaurantId", superAdminController.getRestaurantById);
+router.get(
+  "/restaurants/:restaurantId",
+  superAdminController.getRestaurantDetails
+);
 
 // Route for rejecting or accepting a restaurant
 router.put(
   "/restaurants/reject-or-accept/:restaurantId",
   superAdminController.rejectOrAcceptRestaurant
 );
-
-router.get(
-  "/Restaurant/unapproved",
-  RestaurantController.getUnapprovedRestaurants
-);
-router.get("/restaurants", RestaurantController.getAllRestaurants);
 
 router.delete(
   "/restaurants/:restaurantId",

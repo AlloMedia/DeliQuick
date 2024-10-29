@@ -199,7 +199,7 @@ async function generateTokenAndRespond(res, user) {
   await user.save();
 
   const token = jwt.sign({ userId: user._id }, process.env.TOKEN_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "7d",
   });
 
   const returnUser = {
