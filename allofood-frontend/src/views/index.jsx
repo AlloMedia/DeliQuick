@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import axios from "../api/config/axios";
 import heroImg from "../assets/images/hero.png";
 import Category from "../components/ui/category/Category";
 import Feature from "../components/ui/feature/Feature";

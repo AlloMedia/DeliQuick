@@ -224,49 +224,55 @@ const getAllItems = async (req, res) => {
 
 // Function to add an item to the cart
 const addItemToCart = async (req, res) => {
-    try {
-        const { userId } = req.body; // Assuming you get the user ID from the request body
-        const { itemId, quantity } = req.body;
+  try {
+      const { userId, productId } = req.body; 
+      const item = await Item.findById(productId);
+      if (!item || item.status !== 'available') {
+          return res.status(404).json({ message: 'Item not found or unavailable' });
+      }
 
-        // Find the item and check if it is available
-        const item = await Item.findById(itemId);
-        if (!item || item.status !== 'available') {
-            return res.status(404).json({ message: 'Item not found or unavailable' });
-        }
+      let cart = await Cart.findOne({ user: userId });
 
-        // Find the cart for the user
-        let cart = await Cart.findOne({ user: userId });
+      if (!cart) {
+          cart = new Cart({ user: userId, items: [] });
+      }
+      const existingItemIndex = cart.items.findIndex(cartItem => cartItem.item.toString() === productId);
 
-        if (!cart) {
-            // If the cart does not exist, create a new one
-            cart = new Cart({ user: userId, items: [] });
-        }
+      if (existingItemIndex !== -1) {
+          cart.items[existingItemIndex].quantity += 1; 
+      } else {
+          cart.items.push({ item: productId, quantity: 1 }); 
+      }
+      await cart.save();
 
-        // Check if the item already exists in the cart
-        const existingItemIndex = cart.items.findIndex(cartItem => cartItem.item.toString() === itemId);
+      res.status(200).json({ message: 'Item added to cart', cart });
+  } catch (error) {
+      console.error('Error adding item to cart:', error);
+      res.status(500).json({ message: 'Error adding item to cart', error: error.message });
+  }
+};
 
-        if (existingItemIndex !== -1) {
-            // Update the quantity if the item is already in the cart
-            cart.items[existingItemIndex].quantity += quantity;
-        } else {
-            // Add the new item to the cart
-            cart.items.push({ item: itemId, quantity });
-        }
-
-        // Save the cart
-        await cart.save();
-
-        res.status(200).json({ message: 'Item added to cart', cart });
-    } catch (error) {
-        res.status(500).json({ message: 'Error adding item to cart', error: error.message });
+const getUserCart = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ user: req.params.userId }).populate('items.item'); 
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
     }
+    res.json(cart);
+  } catch (error) {
+    console.error('Error fetching cart:', error);
+    res.status(500).json({ message: 'Error fetching cart data' });
+  }
 };
 
 
+
+
+
 module.exports = {
-  createOrder,
-  getAllItems, 
-  addItemToCart,
   searchRestaurants,
   trackOrder,
+  getAllItems,
+  createOrder,
+  getAllItems, addItemToCart, getUserCart
 };

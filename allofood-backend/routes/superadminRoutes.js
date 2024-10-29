@@ -14,7 +14,6 @@ router.get('/restaurant/:restaurantId', superAdminController.getRestaurantById);
 router.get("/restaurants/:restaurantId", superAdminController.getRestaurantDetails);
 router.get('/restaurants/approved', RestaurantController.getApprovedRestaurants);
 
-
 // Route for rejecting or accepting a restaurant
 router.put(
   "/restaurants/reject-or-accept/:restaurantId",

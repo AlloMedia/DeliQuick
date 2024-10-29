@@ -1,21 +1,30 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const ProductCard = ({ image01, price, id, name }) => {
-  // Function to handle adding item to cart
+const ProductCard = ({ image01, price, _id: productId, name }) => {
   const handleAddToCart = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/user/add', {
-        productId: id,
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (!user || !user._id) {
+        console.error('User ID not found in localStorage');
+        return;
+      }
+
+      const userId = user._id;
+      console.log('User ID:', userId);
+      console.log('Product ID:', productId); 
+
+      const response = await axios.post('http://localhost:3001/client/add', {
+        userId,
+        productId,
         name,
         price,
       });
 
       if (response.status === 200) {
-        // Handle successful response
         console.log('Item added to cart successfully');
       } else {
-        // Handle errors
         console.error('Failed to add item to cart');
       }
     } catch (error) {
@@ -33,7 +42,7 @@ const ProductCard = ({ image01, price, id, name }) => {
         />
       </div>
       <h4 className="font-semibold text-sm mb-4">
-        <Link to={`/foods/${id}`}>{name}</Link>
+        <Link to={`/foods/${productId}`}>{name}</Link>
       </h4>
       <div className="flex items-center justify-between">
         <p className="text-[#DF2020] font-bold text-base">
@@ -41,7 +50,7 @@ const ProductCard = ({ image01, price, id, name }) => {
         </p>
         <button
           className="bg-[#DF2020] text-white px-4 py-2 text-sm rounded-lg"
-          onClick={handleAddToCart}
+          onClick={handleAddToCart} 
         >
           Add to Cart
         </button>
