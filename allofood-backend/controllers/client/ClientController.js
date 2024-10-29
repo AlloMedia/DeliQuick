@@ -14,8 +14,7 @@ const createOrder = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
-        message:
-          "User not found. Please ensure you are properly authenticated.",
+        message: "User not found. Please ensure you are properly authenticated.",
       });
     }
 
@@ -37,11 +36,7 @@ const createOrder = async (req, res) => {
     }
 
     // Validate address
-    if (
-      !address ||
-      typeof address !== "string" ||
-      address.trim().length === 0
-    ) {
+    if (!address || typeof address !== "string" || address.trim().length === 0) {
       return res
         .status(400)
         .json({ message: "Please provide a valid delivery address" });
@@ -90,7 +85,6 @@ const createOrder = async (req, res) => {
         name: item.name,
       });
 
-      // Add to item updates array instead of updating immediately
       itemUpdates.push({
         updateOne: {
           filter: { _id: item._id },
@@ -131,13 +125,64 @@ const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Error placing order:", error);
-
     return res.status(500).json({
       message: "Internal server error while placing order",
-      error:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "An unexpected error occurred",
+      error: process.env.NODE_ENV === "development" ? error.message : "An unexpected error occurred",
+    });
+  }
+};
+
+const getUserOrders = async (req, res) => {
+  try {
+    const { userId } = req.params; 
+
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({
+        message: "Invalid user ID format",
+      });
+    }
+
+    const userExists = await User.findById(userId);
+    if (!userExists) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    const orders = await Order.find({ user: userId })
+      .populate({
+        path: 'items.item',
+        select: 'name image price description',
+        model: 'Item'
+      })
+      .sort({ createdAt: -1 }); 
+
+    const formattedOrders = orders.map(order => ({
+      id: order._id,
+      status: order.status,
+      totalPrice: order.totalPrice,
+      createdAt: order.createdAt,
+      items: order.items.map(item => ({
+        name: item.item.name,
+        image: item.item.image,
+        price: item.price,
+        quantity: item.quantity,
+        description: item.item.description
+      })),
+      address: order.address,
+      deliveryPerson: order.deliveryPerson
+    }));
+
+    return res.status(200).json({
+      message: "Orders retrieved successfully",
+      orders: formattedOrders
+    });
+
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    return res.status(500).json({
+      message: "Internal server error while fetching orders",
+      error: process.env.NODE_ENV === "development" ? error.message : "An unexpected error occurred"
     });
   }
 };
@@ -148,8 +193,7 @@ const searchRestaurants = async (req, res) => {
 
     if (!name && !address) {
       return res.status(400).json({
-        message:
-          "Veuillez fournir un nom ou une adresse de restaurant à rechercher.",
+        message: "Veuillez fournir un nom ou une adresse de restaurant à rechercher.",
       });
     }
 
@@ -167,8 +211,7 @@ const searchRestaurants = async (req, res) => {
 
     if (restaurants.length === 0) {
       return res.status(404).json({
-        message:
-          "Aucun restaurant trouvé correspondant aux critères de recherche.",
+        message: "Aucun restaurant trouvé correspondant aux critères de recherche.",
       });
     }
     res
@@ -177,33 +220,6 @@ const searchRestaurants = async (req, res) => {
   } catch (error) {
     console.error("Erreur lors de la recherche des restaurants:", error);
     res.status(500).json({ message: "Erreur interne du serveur." });
-  }
-};
-
-const trackOrder = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-
-    // Find the order by ID
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-    // Return the status and last updated timestamp
-    return res.status(200).json({
-      message: "Order status fetched successfully",
-      status: order.status,
-      updatedAt: order.updatedAt,
-    });
-  } catch (error) {
-    console.error("Error tracking order:", error);
-    return res.status(500).json({
-      message: "Error fetching order status",
-      error:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Internal Server Error",
-    });
   }
 };
 
@@ -265,14 +281,9 @@ const getUserCart = async (req, res) => {
   }
 };
 
-
-
-
-
 module.exports = {
   searchRestaurants,
-  trackOrder,
   getAllItems,
   createOrder,
-  getAllItems, addItemToCart, getUserCart
+  getAllItems, addItemToCart, getUserCart, getUserOrders
 };
