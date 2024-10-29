@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
+
+  api:
+    build:
+      context: ./allofood-backend
+      dockerfile: Dockerfile
+    container_name: auth_api
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_URI=mongodb://root:example@mongo:27017/allo-db?authSource=admin
+    volumes:
+      - ./allofood-backend:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  client:
+    build:
+      context: ./allofood-frontend
+      dockerfile: Dockerfile
+    container_name: auth_client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

@@ -34,6 +34,7 @@ async function register(req, res) {
     email: req.body.email,
     password: hashedPassword,
     role: role._id,
+    address: req.body.address,
     phone: req.body.phone,
   });
 
@@ -97,7 +98,7 @@ async function login(req, res) {
     if (!validPass)
       return res.status(400).json({ error: "Invalid email or password" });
 
-    if (!user.is_verified) {
+    if (!user.isVerified) {
       const emailSent = await sendVerificationEmail(
         user,
         req.body.email,
@@ -113,7 +114,6 @@ async function login(req, res) {
 
     if (require2FA) return sendOtp(req, res, user);
     else return generateTokenAndRespond(res, user);
-    
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -123,6 +123,8 @@ async function login(req, res) {
 async function sendOtp(req, res) {
   const user = await UserModel.findOne({ email: req.body.email });
   if (!user) return res.status(404).json({ message: "User not found" });
+
+  // console.log(process.env.OTP_TOKEN_SECRET);
 
   const otp = speakeasy.totp({
     secret: process.env.OTP_SECRET,
@@ -197,7 +199,7 @@ async function generateTokenAndRespond(res, user) {
   await user.save();
 
   const token = jwt.sign({ userId: user._id }, process.env.TOKEN_SECRET, {
-    expiresIn: "1d",
+    expiresIn: "7d",
   });
 
   const returnUser = {
@@ -311,14 +313,19 @@ async function resetPassword(req, res) {
 }
 
 function logout(req, res) {
-  req.user = null;
-  req.cookies["authToken"] = null;
-  res.cookie("authToken", "", {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
-  res.json({ success: "Logged out successfully" });
+  try {
+    req.user = null;
+    req.cookies["authToken"] = null;
+    res.cookie("authToken", "", {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.json({ success: "Logged out successfully" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 }
 
 function me(req, res) {

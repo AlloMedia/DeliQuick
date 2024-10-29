@@ -1,58 +1,51 @@
 const Restaurant = require("../models/restaurantModel");
 const User = require("../models/userModel");
 
-module.exports = async () => {  
-    try {
-        await Restaurant.deleteMany({});
-        
-        // Fetch users by their names
-        const userNames = ["Manager", "Client", "Delivery"];
-        const users = await User.find({ name: { $in: userNames } });        
+module.exports = async () => {
+  try {
+    await Restaurant.deleteMany({});
 
-        if (users.length !== userNames.length) {
-            throw new Error("Some users were not found");
-        }
+    // Fetch users by their names
+    const userNames = ["Manager", "Client", "Delivery"];
+    const users = await User.find({ name: { $in: userNames } });
 
-        const restaurants = [
-            {
-                name: "Restaurant 1",
-                description: "Restaurant 1 description",
-                user: users[0]._id,
-                images: {
-                    banner: "banner.jpg",
-                    profileImage: "profile.jpg",
-                    slides: ["slide1.jpg", "slide2.jpg"],
-                },
-                address: {
-                    street: "123 Main St",
-                },
-                phone: "0123456789",
-                status: "open",
-                isAproved:false
-
-            },
-            {
-                name: "Restaurant 2",
-                description: "Restaurant 2 description",
-                user: users[1]._id,
-                images: {
-                    banner: "banner.jpg",
-                    profileImage: "profile.jpg",
-                    slides: ["slide1.jpg", "slide2.jpg"],
-                },
-                address: {
-                    street: "456 Main St",
-                },
-                phone: "0123456789",
-                status: "open",
-                isAproved:false
-
-            },
-        ];
-        await Restaurant.insertMany(restaurants);
-        console.log("Restaurants seeded successfully");
+    if (users.length !== userNames.length) {
+      throw new Error("Some users were not found");
     }
-    catch (error) {
-        console.error("Error seeding restaurants:", error);
-    }
+
+    const restaurants = [
+      {
+        name: "Restaurant 1",
+        description: "Restaurant 1 description",
+        user: users[0]._id,
+        images: {
+          banner: "banner.jpg",
+          profileImage: "profile.jpg",
+          slides: ["slide1.jpg", "slide2.jpg"],
+        },
+        address: "123 Main St",
+        phone: "0123456789",
+        status: "open",
+        isAproved: true,
+      },
+      {
+        name: "Restaurant 2",
+        description: "Restaurant 2 description",
+        user: users[1]._id,
+        images: {
+          banner: "banner.jpg",
+          profileImage: "profile.jpg",
+          slides: ["slide1.jpg", "slide2.jpg"],
+        },
+        address: "456 Main St",
+        phone: "0123456789",
+        status: "open",
+        isAproved: true,
+      },
+    ];
+    await Restaurant.insertMany(restaurants);
+    console.log("Restaurants seeded successfully");
+  } catch (error) {
+    console.error("Error seeding restaurants:", error);
+  }
 };

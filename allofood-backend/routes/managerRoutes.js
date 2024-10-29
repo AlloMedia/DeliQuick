@@ -1,8 +1,19 @@
-const managerController = require("../controllers/manager/managerController");
+const managerController = require("../controllers/manager/ManagerController");
+const orderController = require("../controllers/manager/OrderController");
+const tokenMiddleware = require("../middlewares/tokenMiddleware");
 
 const express = require("express");
 const router = express.Router();
 
-router.get("/me", [''], managerController.getManager);
+router.get("/orders", tokenMiddleware, orderController.getAllOrders);
+router.put("/orders/:id", tokenMiddleware, orderController.updateOrderStatus);
+
+// Routes for the Menu Items CRUD operations
+router.post("/items/create", managerController.addMenuItem);
+router.put("/items/edit", managerController.editMenuItem);
+router.delete("/items/delete/:id/:token", managerController.deleteMenuItem);
+router.get("/categories", managerController.getAllCategories);
+router.get("/uploads/:filename", managerController.getImage);
+router.get("/stats/:token", managerController.getStats);
 
 module.exports = router;

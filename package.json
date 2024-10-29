@@ -1,0 +1,12 @@
+{
+  "name": "allomediadelivery",
+  "version": "1.0.0",
+  "description": "Welcome to the AlloFood project! This README will guide you through the setup and usage of the project.",
+  "main": "index.js",
+  "scripts": {
+    "all": "cd allofood-frontend && npm start && cd ../allofood-backend && npm run dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

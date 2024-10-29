@@ -1,16 +1,16 @@
-const Order = require('../models/orderModel');
-const User = require('../models/userModel');
-const Item = require('../models/itemModel');
+const Order = require("../models/orderModel");
+const User = require("../models/userModel");
+const Item = require("../models/itemModel");
 
 module.exports = async () => {
   try {
     await Order.deleteMany({});
 
     // Fetch users by their names
-    const userNames = ["Manager", "Client"];
+    const userNames = ["Manager", "Client", "Delivery"];
     const users = await User.find({ name: { $in: userNames } });
-    
-    const itemNames = ["Coca Cola", "Burger", "Chips"]; 
+
+    const itemNames = ["Coca Cola", "Burger", "Chips"];
     const items = await Item.find({ name: { $in: itemNames } });
 
     if (users.length !== userNames.length) {
@@ -18,7 +18,7 @@ module.exports = async () => {
     }
 
     if (items.length !== itemNames.length) {
-        throw new Error("Some items were not found");
+      throw new Error("Some items were not found");
     }
 
     const orders = [
@@ -28,16 +28,11 @@ module.exports = async () => {
           {
             item: items[0]._id,
             quantity: 2,
-            price: 10.0
+            price: 10.0,
           },
-          {
-            item: items[1]._id,
-            quantity: 1,
-            price: 20.0
-          }
         ],
-        totalPrice: 40.0,
-        status: 'Pending'
+        totalPrice: 10.0,
+        status: "On the Way",
       },
       {
         user: users[1]._id,
@@ -45,17 +40,69 @@ module.exports = async () => {
           {
             item: items[2]._id,
             quantity: 3,
-            price: 15.0
-          }
+            price: 15.0,
+          },
+          {
+            item: items[1]._id,
+            quantity: 1,
+            price: 20.0,
+          },
         ],
-        totalPrice: 45.0,
-        status: 'Processing'
-      }
+        totalPrice: 35.0,
+        status: "Ready",
+      },
+
+      {
+        user: users[2]._id,
+        items: [
+          {
+            item: items[2]._id,
+            quantity: 3,
+            price: 15.0,
+          },
+          {
+            item: items[1]._id,
+            quantity: 1,
+            price: 20.0,
+          },
+        ],
+        totalPrice: 35.0,
+        status: "In Progress",
+      },
+      {
+        user: users[1]._id,
+        items: [
+          {
+            item: items[2]._id,
+            quantity: 3,
+            price: 15.0,
+          },
+          {
+            item: items[1]._id,
+            quantity: 1,
+            price: 20.0,
+          },
+        ],
+        totalPrice: 35.0,
+        status: "In Progress",
+      },
+      {
+        user: users[1]._id,
+        items: [
+          {
+            item: items[0]._id,
+            quantity: 2,
+            price: 10.0,
+          },
+        ],
+        totalPrice: 10.0,
+        status: "Pending",
+      },
     ];
 
     await Order.insertMany(orders);
-    console.log('Orders seeded successfully');
+    console.log("Orders seeded successfully");
   } catch (error) {
-    console.error('Error seeding orders:', error);
+    console.error("Error seeding orders:", error);
   }
 };

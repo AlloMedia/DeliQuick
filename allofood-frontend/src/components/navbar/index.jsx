@@ -209,7 +209,7 @@ const Navbar = (props) => {
                   Newsletter Settings
                 </a>
                 <a
-                  href=" "
+                  href="/logout"
                   className="mt-3 text-sm font-medium text-red-500 hover:text-red-500 transition duration-150 ease-out hover:ease-in"
                 >
                   Log Out

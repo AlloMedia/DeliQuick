@@ -42,10 +42,8 @@ const restaurantSchema = new mongoose.Schema(
       ],
     },
     address: {
-      street: {
         type: String,
         required: true,
-      },
     },
     phone: {
       type: String,
@@ -56,6 +54,7 @@ const restaurantSchema = new mongoose.Schema(
       enum: ["open", "close"],
       default: "open",
     },
+
     isAproved: {
       type: Boolean,
       required: true,
