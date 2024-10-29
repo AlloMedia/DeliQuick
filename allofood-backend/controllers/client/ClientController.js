@@ -14,7 +14,8 @@ const createOrder = async (req, res) => {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
-        message: "User not found. Please ensure you are properly authenticated.",
+        message:
+          "User not found. Please ensure you are properly authenticated.",
       });
     }
 
@@ -36,7 +37,11 @@ const createOrder = async (req, res) => {
     }
 
     // Validate address
-    if (!address || typeof address !== "string" || address.trim().length === 0) {
+    if (
+      !address ||
+      typeof address !== "string" ||
+      address.trim().length === 0
+    ) {
       return res
         .status(400)
         .json({ message: "Please provide a valid delivery address" });
@@ -127,14 +132,17 @@ const createOrder = async (req, res) => {
     console.error("Error placing order:", error);
     return res.status(500).json({
       message: "Internal server error while placing order",
-      error: process.env.NODE_ENV === "development" ? error.message : "An unexpected error occurred",
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "An unexpected error occurred",
     });
   }
 };
 
 const getUserOrders = async (req, res) => {
   try {
-    const { userId } = req.params; 
+    const { userId } = req.params;
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({
@@ -151,38 +159,40 @@ const getUserOrders = async (req, res) => {
 
     const orders = await Order.find({ user: userId })
       .populate({
-        path: 'items.item',
-        select: 'name image price description',
-        model: 'Item'
+        path: "items.item",
+        select: "name image price description",
+        model: "Item",
       })
-      .sort({ createdAt: -1 }); 
+      .sort({ createdAt: -1 });
 
-    const formattedOrders = orders.map(order => ({
+    const formattedOrders = orders.map((order) => ({
       id: order._id,
       status: order.status,
       totalPrice: order.totalPrice,
       createdAt: order.createdAt,
-      items: order.items.map(item => ({
+      items: order.items.map((item) => ({
         name: item.item.name,
         image: item.item.image,
         price: item.price,
         quantity: item.quantity,
-        description: item.item.description
+        description: item.item.description,
       })),
       address: order.address,
-      deliveryPerson: order.deliveryPerson
+      deliveryPerson: order.deliveryPerson,
     }));
 
     return res.status(200).json({
       message: "Orders retrieved successfully",
-      orders: formattedOrders
+      orders: formattedOrders,
     });
-
   } catch (error) {
     console.error("Error fetching user orders:", error);
     return res.status(500).json({
       message: "Internal server error while fetching orders",
-      error: process.env.NODE_ENV === "development" ? error.message : "An unexpected error occurred"
+      error:
+        process.env.NODE_ENV === "development"
+          ? error.message
+          : "An unexpected error occurred",
     });
   }
 };
@@ -193,7 +203,8 @@ const searchRestaurants = async (req, res) => {
 
     if (!name && !address) {
       return res.status(400).json({
-        message: "Veuillez fournir un nom ou une adresse de restaurant à rechercher.",
+        message:
+          "Veuillez fournir un nom ou une adresse de restaurant à rechercher.",
       });
     }
 
@@ -211,7 +222,8 @@ const searchRestaurants = async (req, res) => {
 
     if (restaurants.length === 0) {
       return res.status(404).json({
-        message: "Aucun restaurant trouvé correspondant aux critères de recherche.",
+        message:
+          "Aucun restaurant trouvé correspondant aux critères de recherche.",
       });
     }
     res
@@ -241,43 +253,49 @@ const getAllItems = async (req, res) => {
 // Function to add an item to the cart
 const addItemToCart = async (req, res) => {
   try {
-      const { userId, productId } = req.body; 
-      const item = await Item.findById(productId);
-      if (!item || item.status !== 'available') {
-          return res.status(404).json({ message: 'Item not found or unavailable' });
-      }
+    const { userId, productId } = req.body;
+    const item = await Item.findById(productId);
+    if (!item || item.status !== "available") {
+      return res.status(404).json({ message: "Item not found or unavailable" });
+    }
 
-      let cart = await Cart.findOne({ user: userId });
+    let cart = await Cart.findOne({ user: userId });
 
-      if (!cart) {
-          cart = new Cart({ user: userId, items: [] });
-      }
-      const existingItemIndex = cart.items.findIndex(cartItem => cartItem.item.toString() === productId);
+    if (!cart) {
+      cart = new Cart({ user: userId, items: [] });
+    }
+    const existingItemIndex = cart.items.findIndex(
+      (cartItem) => cartItem.item.toString() === productId
+    );
 
-      if (existingItemIndex !== -1) {
-          cart.items[existingItemIndex].quantity += 1; 
-      } else {
-          cart.items.push({ item: productId, quantity: 1 }); 
-      }
-      await cart.save();
+    if (existingItemIndex !== -1) {
+      cart.items[existingItemIndex].quantity += 1;
+    } else {
+      cart.items.push({ item: productId, quantity: 1 });
+    }
+    await cart.save();
 
-      res.status(200).json({ message: 'Item added to cart', cart });
+    res.status(200).json({ message: "Item added to cart", cart });
   } catch (error) {
-      console.error('Error adding item to cart:', error);
-      res.status(500).json({ message: 'Error adding item to cart', error: error.message });
+    console.error("Error adding item to cart:", error);
+    res
+      .status(500)
+      .json({ message: "Error adding item to cart", error: error.message });
   }
 };
 
 const getUserCart = async (req, res) => {
   try {
-    const cart = await Cart.findOne({ user: req.params.userId }).populate('items.item'); 
+    const cart = await Cart.findOne({ user: req.params.userId }).populate(
+      "items.item"
+    );
     if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
+      return res.status(404).json({ message: "Cart not found" });
     }
     res.json(cart);
   } catch (error) {
-    console.error('Error fetching cart:', error);
-    res.status(500).json({ message: 'Error fetching cart data' });
+    console.error("Error fetching cart:", error);
+    res.status(500).json({ message: "Error fetching cart data" });
   }
 };
 
@@ -285,5 +303,7 @@ module.exports = {
   searchRestaurants,
   getAllItems,
   createOrder,
-  getAllItems, addItemToCart, getUserCart, getUserOrders
+  addItemToCart,
+  getUserCart,
+  getUserOrders,
 };

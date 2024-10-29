@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom'; 
-import axios from 'axios'; 
+import axios from '../../api/config/axios'; 
 import Header from 'components/shared/header';
 
 const Cart = () => {
@@ -13,7 +13,7 @@ const Cart = () => {
   useEffect(() => {
     const fetchCartData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/client/cart/${userId}`); 
+        const response = await axios.get(`/client/cart/${userId}`); 
         setCartItems(response.data.items);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);

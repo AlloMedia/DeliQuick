@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../api/config/axios';
 import RestaurantCard from './RestaurantCard';
 
 const RestaurantsSection = () => {
@@ -18,7 +18,7 @@ const RestaurantsSection = () => {
   useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/superadmin/restaurants/approved');
+        const response = await axios.get('/api/restaurants/approved');
         setRestaurants(response.data);
       } catch (err) {
         setError(err.message);

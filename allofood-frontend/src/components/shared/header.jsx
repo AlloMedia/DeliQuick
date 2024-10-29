@@ -4,6 +4,7 @@ import logo from "../../assets/images/res-logo.png";
 import { Link } from "react-router-dom";
 import { useAuth } from "context/auth/AuthContext";
 import { useState } from "react";
+import PublicRoute from "components/auth/PublicRoute";
 
 const CartLink = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -65,7 +66,7 @@ const Header = () => {
             className="flex items-center space-x-2"
             onClick={toggleDropdown}
           >
-            <img src={user.image} alt="User Avatar" className="w-8 h-8 rounded-full" />
+            <img src={PublicRoute('../src/assets/images/pp.jpg')} alt="User Avatar" className="w-8 h-8 rounded-full" />
             <div>
             <div className="text-gray-700">{user.name}</div>
             <div className="text-gray-700">{user.email}</div>

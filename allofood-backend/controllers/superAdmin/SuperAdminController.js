@@ -52,11 +52,11 @@ const getRestaurantById = async (req, res) => {
     const { restaurantId } = req.params;
     const restaurant = await Restaurant.findById(restaurantId);
     if (!restaurant) {
-      return res.status(404).json({ message: 'Restaurant introuvable.' });
+      return res.status(404).json({ message: "Restaurant introuvable." });
     }
     res.status(200).json({ restaurant });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur interne du serveur.' });
+    res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
 // Ajouter un nouveau restaurant
@@ -150,7 +150,6 @@ const deleteRestaurant = async (req, res) => {
 
 const editRestaurant = async (req, res) => {
   try {
-    
     const superAdminId = "671f4ed7e74bd1a55164d28e";
 
     const { restaurantId } = req.params;
@@ -175,20 +174,19 @@ const editRestaurant = async (req, res) => {
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
       { name, description, images, address, phone, status, isApproved },
-      { new: true, runValidators: true } 
+      { new: true, runValidators: true }
     );
 
     // If the restaurant does not exist, return a 404 error
     if (!updatedRestaurant) {
       return res.status(404).json({ message: "Restaurant introuvable." });
     }
-    
+
     // Respond with the updated restaurant information
     res.status(200).json({
       message: "Restaurant mis à jour avec succès.",
       restaurant: updatedRestaurant,
     });
-    
   } catch (error) {
     if (error instanceof mongoose.Error.ValidationError) {
       return res
@@ -206,28 +204,31 @@ const searchRestaurants = async (req, res) => {
     const { query } = req.query;
 
     if (!query) {
-      return res.status(400).json({ message: "Veuillez fournir un terme de recherche." });
+      return res
+        .status(400)
+        .json({ message: "Veuillez fournir un terme de recherche." });
     }
 
     // Search for restaurants by name or address matching the query
     const searchRegex = new RegExp(query, "i");
     const restaurants = await Restaurant.find({
-      $or: [
-        { name: searchRegex },
-        { address: searchRegex }
-      ]
+      $or: [{ name: searchRegex }, { address: searchRegex }],
     });
 
     if (restaurants.length === 0) {
-      return res.status(404).json({ message: "Aucun restaurant trouvé correspondant aux critères de recherche." });
+      return res.status(404).json({
+        message:
+          "Aucun restaurant trouvé correspondant aux critères de recherche.",
+      });
     }
-    res.status(200).json({ message: "Restaurants trouvés avec succès.", restaurants });
+    res
+      .status(200)
+      .json({ message: "Restaurants trouvés avec succès.", restaurants });
   } catch (error) {
     console.error("Erreur lors de la recherche des restaurants:", error);
     res.status(500).json({ message: "Erreur interne du serveur." });
   }
 };
-
 
 const getRestaurantDetails = async (req, res) => {
   try {
@@ -241,7 +242,9 @@ const getRestaurantDetails = async (req, res) => {
     }
     restaurant.images.banner = `/${restaurant.images.banner}`;
     restaurant.images.profileImage = `/${restaurant.images.profileImage}`;
-    restaurant.images.slides = restaurant.images.slides.map(image => `/${image}`);
+    restaurant.images.slides = restaurant.images.slides.map(
+      (image) => `/${image}`
+    );
 
     res.status(200).json({
       message: "Restaurant details fetched successfully.",
@@ -253,13 +256,17 @@ const getRestaurantDetails = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   rejectOrAcceptRestaurant,
   addRestaurant,
   upload: upload.fields([
-    { name: 'banner', maxCount: 1 },
-    { name: 'profileImage', maxCount: 1 },
-    { name: 'slides', maxCount: 10 },
-  ]), editRestaurant, searchRestaurants, deleteRestaurant, getRestaurantById, getRestaurantDetails };
+    { name: "banner", maxCount: 1 },
+    { name: "profileImage", maxCount: 1 },
+    { name: "slides", maxCount: 10 },
+  ]),
+  editRestaurant,
+  searchRestaurants,
+  deleteRestaurant,
+  getRestaurantById,
+  getRestaurantDetails,
+};
