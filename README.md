@@ -1,6 +1,6 @@
-# AlloFood - Home Delivery Service Application
+# DeliQuick - Home Delivery Service Application
 
-AlloFood is a full-stack home delivery service application built using MongoDB, Express, Node.js for the backend, and React for the frontend. The application includes features such as user authentication with JWT and 2FA, CRUD operations for client orders, delivery tracking, and an admin management system.
+DeliQuick is a full-stack home delivery service application built using MongoDB, Express, Node.js for the backend, and React for the frontend. The application includes features such as user authentication with JWT and 2FA, CRUD operations for client orders, delivery tracking, and an admin management system.
 
 ## Table of Contents
 
@@ -192,7 +192,7 @@ npm install
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/allofood.git
+git clone https://github.com/your-username/DeliQuick.git
 ```
 
 2. Install dependencies:
@@ -255,13 +255,13 @@ The test suite includes unit tests for the auth routes and controllers.
 ## Project Structure
 
 ```bash
-AlloFood/
+DeliQuick/
 ├── .dockerignore
 ├── .env
 ├── .gitignore
 ├── .vscode/
 │ └── settings.json
-├── allofood-backend/
+├── DeliQuick-backend/
 │ ├── .dockerignore
 │ ├── .env
 │ ├── .env.example
@@ -285,7 +285,7 @@ AlloFood/
 │ ├── tests/
 │ ├── uploads/
 │ ├── validations/
-├── allofood-frontend/
+├── DeliQuick-frontend/
 │ ├── .dockerignore
 │ ├── .gitignore
 │ ├── .vscode/
@@ -316,11 +316,11 @@ AlloFood/
 
 ### Backend Dockerfile
 
-The backend Dockerfile is located at `allofood-backend/Dockerfile`:
+The backend Dockerfile is located at `DeliQuick-backend/Dockerfile`:
 
 ```dockerfile
 FROM node:20
-WORKDIR /allofood-backend
+WORKDIR /DeliQuick-backend
 COPY package.json .
 RUN npm install
 COPY . .
@@ -330,11 +330,11 @@ CMD [ "npm" , "run", "dev" ]
 
 ### Frontend Dockerfile
 
-The frontend Dockerfile is located at `allofood-frontend/dockerfile`:
+The frontend Dockerfile is located at `DeliQuick-frontend/dockerfile`:
 
 ```dockerfile
 FROM node:20
-WORKDIR /allofood-frontend
+WORKDIR /DeliQuick-frontend
 COPY package.json .
 RUN npm install
 COPY . .
@@ -359,17 +359,17 @@ ports: - "27017:27017"
 networks: - app-network
 api:
 build:
-context: ./allofood-backend
+context: ./DeliQuick-backend
 dockerfile: Dockerfile
 container_name: auth_api
 ports: - "3001:3001"
 environment: - MONGODB_URI=mongodb://root:example@mongo:27017/allo-db?authSource=admin
-volumes: - ./allofood-backend:/app - /app/node_modules
+volumes: - ./DeliQuick-backend:/app - /app/node_modules
 depends_on: - mongo
 networks: - app-network
 client:
 build:
-context: ./allofood-frontend
+context: ./DeliQuick-frontend
 dockerfile: Dockerfile
 container_name: auth_client
 ports: - "3000:3000"
@@ -392,4 +392,4 @@ Contributions are welcome! Feel free to submit a pull request or open an issue.
 
 ---
 
-_This README was generated for the AlloFood project, a home delivery service platform._
+_This README was generated for the DeliQuick project, a home delivery service platform._
